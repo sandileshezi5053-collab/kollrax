@@ -1,0 +1,11 @@
+# Netlify config for a Python Flask project.
+# Note: Netlify is primarily a static hosting platform. This config only validates the Python app during build.
+# It does not make Netlify serve the Flask backend as a real dynamic application.
+
+[build]
+  command = "pip install -r requirements.txt && python -m py_compile app.py"
+  publish = "static"
+
+[dev]
+  command = "python app.py"
+  port = 5000
