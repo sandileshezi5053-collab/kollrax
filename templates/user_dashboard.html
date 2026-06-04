@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-[linear-gradient(180deg,#f6fbff_0%,#ffffff_40%)] text-[#103678]">
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-[#10267d] backdrop-blur-sm">
+    <nav class="flex h-16 w-full items-center justify-between px-4 lg:px-6 animate-slide-down">
+      <a href="{{ url_for('marketing') }}" class="flex items-center gap-3">
+        <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="h-10 w-10 object-contain" />
+        <div>
+          <span class="block text-lg font-semibold tracking-tight text-white">KollraX</span>
+          <span class="hidden text-[10px] uppercase tracking-[0.28em] text-white/70 sm:block">Microsoft 365</span>
+        </div>
+      </a>
+
+      <div class="hidden items-center gap-6 md:flex">
+        <a href="#overview" class="text-sm font-medium text-white hover:text-white/80">Overview</a>
+        <a href="#plans" class="text-sm font-medium text-white hover:text-white/80">Plans</a>
+        <a href="#billing" class="text-sm font-medium text-white hover:text-white/80">Billing</a>
+        <a href="#support" class="text-sm font-medium text-white hover:text-white/80">Support</a>
+        <a href="#profile" class="text-sm font-medium text-white hover:text-white/80">Profile</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        {% if current_user %}
+          <button type="button" data-collapse-toggle="profile-panel" class="rounded-full border border-white/15 bg-white/10 p-1 text-white hover:bg-white/20 flex">
+            {% if current_user.avatar %}
+              <img src="{{ url_for('static', filename=current_user.avatar) }}" alt="Avatar" class="h-10 w-10 rounded-full object-cover" />
+            {% else %}
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#eef7ff] text-sm font-semibold text-[#103678]">{{ current_user.fullName[:1] }}</div>
+            {% endif %}
+          </button>
+        {% endif %}
+        <form action="{{ url_for('logout') }}" method="post">
+          <button class="rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20">Sign out</button>
+        </form>
+      </div>
+    </nav>
+  </header>
+
+  <main class="mt-20 w-full px-4 py-8 lg:px-6 animate-fade-in">
+    <div class="grid gap-6 lg:grid-cols-[1.5fr_0.95fr]">
+      <section class="space-y-6">
+        <div id="overview" class="rounded-[1.75rem] border border-[#103678]/10 bg-white p-6 shadow-[0_18px_40px_rgba(16,54,120,0.08)] animate-fade-in">
+          <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-[0.28em] text-[#74b4d9]">Client workspace</p>
+              <h1 class="mt-3 text-3xl font-semibold text-[#103678] sm:text-4xl">Welcome back, {{ current_user.fullName if current_user else 'there' }}</h1>
+              <p class="mt-4 max-w-2xl text-sm text-[#103678]/75">A modern client dashboard for plan selection, billing, support, and smart intake.</p>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="space-y-6 flex flex-col items-center">
+          <section class="max-w-5xl rounded-[1.5rem] border border-[#103678]/10 bg-white p-6 shadow-[0_30px_90px_rgba(16,54,120,0.14)] animate-fade-in">
+            <div class="maintenance-panel text-center">
+              <p class="text-xs uppercase tracking-[0.24em] text-[#2f88c0]">Maintenance mode</p>
+              <h2 class="mt-3 text-3xl font-semibold text-[#10255f] sm:text-4xl">The user dashboard is temporarily down</h2>
+              <p class="mx-auto mt-4 max-w-3xl text-sm leading-7 text-[#103678]/85 sm:text-base">We are currently finishing the dashboard experience. Our engineers are actively working on restoring the full dashboard. For urgent help, reach out directly on WhatsApp and we’ll assist you immediately.</p>
+              <a href="https://wa.me/2347085672506" target="_blank" rel="noopener noreferrer" role="button" style="background:#10a37f;color:#fff;" class="mt-8 inline-flex w-full items-center justify-center rounded-full px-7 py-3 text-sm font-semibold shadow transition duration-300 hover:bg-[#0f8e70]">Chat with us</a>
+            </div>
+
+            <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {% for i in range(6) %}
+              <div class="rounded-[1.5rem] border border-[#cfdff4] bg-[#eaf4ff] p-6">
+                <div class="h-4 w-40 rounded-full bg-[#d9e8fb] skeleton"></div>
+                <div class="mt-5 space-y-3">
+                  <div class="h-3 w-full rounded-full bg-[#d9e8fb] skeleton"></div>
+                  <div class="h-3 w-5/6 rounded-full bg-[#d9e8fb] skeleton"></div>
+                  <div class="h-3 w-3/4 rounded-full bg-[#d9e8fb] skeleton"></div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+{% endblock %}

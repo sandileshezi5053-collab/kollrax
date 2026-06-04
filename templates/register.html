@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#103678] px-6 py-12">
+  <div class="pointer-events-none absolute inset-0 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(29,129,228,0.12),transparent_24%),radial-gradient(circle_at_85%_12%,rgba(20,102,205,0.1),transparent_22%)]"></div>
+    <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px); background-size:96px 96px;"></div>
+  </div>
+
+  <div class="premium-panel-dark relative z-10 w-full max-w-lg rounded-[2rem] p-8 text-white">
+    <div class="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#74b4d9]/80 to-transparent"></div>
+    <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="mb-5 h-14 w-14 object-contain" />
+    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-[#ebebeb]">Create your KollraX account</p>
+    <h1 class="text-2xl font-semibold tracking-tight">Start your Microsoft 365 plan journey</h1>
+    <p class="mt-2 text-sm text-[#ebebeb]">Create a client account to access your dashboard, pricing, and checkout flow.</p>
+
+    <form method="post" class="mt-6 grid gap-4">
+      <input required name="fullName" type="text" placeholder="Full name" class="premium-input rounded-2xl px-4 py-3.5 text-sm text-white outline-none placeholder:text-[#ebebeb]" />
+      <input required name="email" type="email" placeholder="Work email" class="premium-input rounded-2xl px-4 py-3.5 text-sm text-white outline-none placeholder:text-[#ebebeb]" />
+      <input required name="company" type="text" placeholder="Company name" class="premium-input rounded-2xl px-4 py-3.5 text-sm text-white outline-none placeholder:text-[#ebebeb]" />
+      <div class="flex gap-2">
+        <select name="country_code" class="premium-input rounded-2xl px-3 py-3.5 text-sm text-white outline-none w-28">
+          <option value="+234">+234</option>
+          <option value="+1">+1</option>
+          <option value="+44">+44</option>
+          <option value="+233">+233</option>
+          <option value="+27">+27</option>
+        </select>
+        <input required name="phone" type="text" placeholder="Phone number" class="premium-input rounded-2xl px-4 py-3.5 text-sm text-white outline-none placeholder:text-[#ebebeb] flex-1" />
+      </div>
+      <input required name="password" type="password" placeholder="Password" class="premium-input rounded-2xl px-4 py-3.5 text-sm text-white outline-none placeholder:text-[#ebebeb]" />
+      <input required name="confirm_password" type="password" placeholder="Confirm password" class="premium-input rounded-2xl px-4 py-3.5 text-sm text-white outline-none placeholder:text-[#ebebeb]" />
+      <button class="premium-button-primary rounded-2xl px-5 py-3.5 text-sm font-semibold text-white">Create account</button>
+      {% if error %}
+        <p class="text-sm text-rose-300">{{ error }}</p>
+      {% endif %}
+      <p class="text-sm text-[#ebebeb]">Already have an account? <a class="text-[#74b4d9] hover:text-white" href="{{ url_for('login') }}">Login</a></p>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-[linear-gradient(180deg,#edf4ff_0%,#ffffff_40%,#f8fbff_100%)] text-[#103678]">
+  <header class="border-b border-[#103678]/10 bg-white/80 backdrop-blur-xl">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
+      <a href="{{ url_for('marketing') }}" class="flex items-center gap-3 text-[#103678]">
+        <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="h-11 w-11 object-contain" />
+        <span class="text-lg font-semibold tracking-tight">Checkout</span>
+      </a>
+      <a href="{{ url_for('plan_selection') }}" class="rounded-2xl border border-[#103678]/12 bg-white px-4 py-2 text-sm font-semibold text-[#103678] hover:border-[#74b4d9]">Back to plans</a>
+    </nav>
+  </header>
+
+  <main class="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
+    <section class="dashboard-panel rounded-[1.75rem] p-6 shadow-[0_24px_56px_rgba(16,54,120,0.12)]">
+      <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Billing snapshot</p>
+      <h1 class="mt-3 text-3xl font-semibold text-[#103678]">Confirm your Microsoft 365 service structure.</h1>
+      <p class="mt-3 text-sm text-[#103678]/75">This page captures the billing flow details from your spec: plan, user count, optional add-ons, and payment method.</p>
+
+      <div class="mt-6 space-y-4 rounded-[1.25rem] border border-[#103678]/10 bg-[#f7fbff] p-4 text-sm text-[#103678]">
+        <div class="flex items-center justify-between"><span>Plan</span><strong>{{ billing_plans[0]['name'] if not selected_plan else (billing_plans | selectattr('id','equalto',selected_plan) | list | first).name }}</strong></div>
+        <div class="flex items-center justify-between"><span>Users</span><strong>{{ selected_user_count }}</strong></div>
+        <div class="flex items-center justify-between"><span>Monthly subscription</span><strong>{{ billing_summary['monthly_total'] | format_currency }}</strong></div>
+        
+        <div class="flex items-center justify-between"><span>Add-ons</span><strong>{{ billing_summary['addon_total'] | format_currency }}</strong></div>
+        <div class="flex items-center justify-between border-t border-[#103678]/10 pt-3 text-base font-semibold"><span>First payment</span><strong>{{ billing_summary['first_payment_total'] | format_currency }}</strong></div>
+      </div>
+
+      <div class="mt-6 rounded-[1.25rem] border border-[#103678]/10 bg-white p-4 text-sm text-[#103678]/80">
+        <p class="text-xs uppercase tracking-[0.18em] text-[#74b4d9]">Included in the selected plan</p>
+        <ul class="mt-3 space-y-2">
+          {% for plan in billing_plans %}
+            {% if plan.id == selected_plan %}
+              {% for item in plan.features %}
+                <li class="flex items-start gap-2"><span class="mt-1 text-[#74b4d9]">●</span><span>{{ item }}</span></li>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <section class="dashboard-panel rounded-[1.75rem] p-6 shadow-[0_24px_56px_rgba(16,54,120,0.12)]">
+      <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Payment & account details</p>
+      <h2 class="mt-3 text-2xl font-semibold text-[#103678]">Complete the billing intake</h2>
+      <form method="post" class="mt-6 space-y-5">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="text-sm text-[#103678]">Full name<input name="fullName" required class="dashboard-input mt-2 w-full rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none" /></label>
+          <label class="text-sm text-[#103678]">Company name<input name="companyName" required class="dashboard-input mt-2 w-full rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none" /></label>
+          <label class="text-sm text-[#103678]">Email<input type="email" name="email" required class="dashboard-input mt-2 w-full rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none" /></label>
+          <label class="text-sm text-[#103678]">Phone<input name="phone" required class="dashboard-input mt-2 w-full rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none" /></label>
+        </div>
+
+        <label class="text-sm text-[#103678]">Business size
+          <select name="businessSize" class="dashboard-input mt-2 w-full rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none">
+            <option>1-10 employees</option>
+            <option>11-50 employees</option>
+            <option>51-200 employees</option>
+            <option>200+ employees</option>
+          </select>
+        </label>
+
+        <div>
+          <p class="text-sm font-semibold text-[#103678]">Payment method</p>
+          <div class="mt-3 grid gap-3 sm:grid-cols-2">
+            <label class="rounded-2xl border border-[#103678]/10 bg-white px-4 py-3 text-sm text-[#103678]">
+              <input type="radio" name="payment_method" value="paystack" checked class="mr-2" /> Paystack
+            </label>
+            <label class="rounded-2xl border border-[#103678]/10 bg-white px-4 py-3 text-sm text-[#103678]">
+              <input type="radio" name="payment_method" value="stripe" class="mr-2" /> Stripe
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="premium-button-primary w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white">Proceed to payment</button>
+      </form>
+    </section>
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white text-[#103678]">
+  <header class="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#10267d] backdrop-blur-xl">
+    <nav class="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-6 lg:px-8">
+      <a href="{{ url_for('marketing') }}" class="flex items-center gap-3">
+        <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="h-11 w-11 object-contain" />
+        <div>
+          <span class="block text-lg font-semibold tracking-tight text-white">KollraX</span>
+          <span class="hidden text-[10px] uppercase tracking-[0.28em] text-white sm:block">Microsoft 365 Operations</span>
+        </div>
+      </a>
+
+      <div class="hidden items-center gap-8 md:flex">
+        <a href="{{ url_for('dashboard') if current_user else url_for('marketing') }}" class="text-sm font-medium text-white transition hover:text-white/80">Home</a>
+        <a href="#services" class="text-sm font-medium text-white transition hover:text-white/80">Services</a>
+        <a href="#about" class="text-sm font-medium text-white transition hover:text-white/80">About</a>
+        <a href="#contact" class="text-sm font-medium text-white transition hover:text-white/80">Contact</a>
+      </div>
+
+      <div class="hidden items-center gap-3 md:flex">
+        {% if current_user %}
+          <a href="{{ url_for('admin_dashboard') if current_user.role == 'admin' else url_for('dashboard') }}" class="rounded-2xl border border-white/20 bg-white/8 px-4 py-2.5 text-sm font-medium text-white hover:border-[#74b4d9]">
+            {{ 'Admin' if current_user.role == 'admin' else 'Dashboard' }}
+          </a>
+          <form action="{{ url_for('logout') }}" method="post">
+            <button class="premium-button-primary rounded-2xl px-4 py-2.5 text-sm font-semibold text-white">Sign out</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="rounded-2xl border border-white/20 bg-white/8 px-4 py-2.5 text-sm font-medium text-white hover:border-[#74b4d9]">
+            Login
+          </a>
+        {% endif %}
+      </div>
+
+      <button class="md:hidden rounded-2xl border border-white/20 bg-white/8 px-3 py-2 text-white" data-nav-toggle aria-label="Open navigation">
+        {{ icon("Menu") }}
+      </button>
+    </nav>
+
+    <div class="hidden border-t border-white/10 bg-[#10267d] px-6 py-4 md:hidden" data-nav-panel>
+      <div class="mx-auto flex max-w-7xl flex-col gap-3">
+        <a href="{{ url_for('dashboard') if current_user else url_for('marketing') }}" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Home</a>
+        <a href="#services" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Services</a>
+        <a href="#about" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">About</a>
+        <a href="#contact" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Contact</a>
+        {% if current_user %}
+          <a href="{{ url_for('admin_dashboard') if current_user.role == 'admin' else url_for('dashboard') }}" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">{{ 'Admin' if current_user.role == 'admin' else 'Dashboard' }}</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <section id="home" class="enterprise-section relative overflow-hidden border-b border-[#103678]/10 pt-28">
+    <style>
+      @keyframes dashboardFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+
+      .hero-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2.5rem;
+      }
+
+      .hero-copy {
+        width: 100%;
+        max-width: 44rem;
+      }
+
+      .hero-visual {
+        width: 100%;
+      }
+
+      .dashboard-float {
+        animation: dashboardFloat 4.2s ease-in-out infinite;
+      }
+
+      @media (min-width: 64rem) {
+        .hero-layout {
+          display: grid;
+          grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+          align-items: start;
+          gap: 3rem;
+        }
+
+        .hero-copy {
+          max-width: 34rem;
+          padding-right: 2rem;
+        }
+
+        .hero-visual {
+          justify-self: end;
+          max-width: 50rem;
+        }
+
+        .hero-visual .dashboard-float {
+          min-height: 580px;
+        }
+
+        .hero-visual img {
+          height: 540px;
+        }
+      }
+
+      @media (min-width: 80rem) {
+        .hero-layout {
+          grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+        }
+
+        .hero-copy {
+          max-width: 35rem;
+        }
+
+        .hero-visual {
+          max-width: 58rem;
+        }
+
+        .hero-visual .dashboard-float {
+          min-height: 640px;
+        }
+
+        .hero-visual img {
+          height: 600px;
+        }
+      }
+    </style>
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(29,129,228,0.12),transparent_24%),radial-gradient(circle_at_85%_12%,rgba(20,102,205,0.1),transparent_22%)]"></div>
+      <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px); background-size:96px 96px;"></div>
+    </div>
+
+    <div class="hero-layout relative min-h-[calc(100vh-6rem)] w-full px-4 pb-18 sm:px-6 lg:px-12 xl:px-16 2xl:px-20">
+      <div class="hero-copy">
+        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-[#74b4d9]">Microsoft 365 Delivery and Support</p>
+        <h1 class="mt-10 max-w-[12ch] text-5xl font-semibold leading-[1.02] tracking-[-0.05em] text-[#103678] sm:text-6xl xl:text-[4.1rem] lg:mt-12">
+          We Manage Your Microsoft 365.
+          <br>
+          You Focus on Growing Your Business.
+        </h1>
+        <p class="mt-6 max-w-xl text-base leading-8 text-[#103678]/72 sm:text-lg">
+          From advanced cloud security and seamless user onboarding to proactive 
+          optimization and priority support&mdash;KollraX handles your entire Microsoft 
+          365 environment with enterprise-grade reliability and zero friction.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a href="{{ url_for('dashboard') }}" class="premium-button-primary inline-flex items-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-semibold text-white">
+            Get Started {{ icon("ArrowRight") }}
+          </a>
+          <a href="{{ url_for('dashboard') }}" class="inline-flex items-center rounded-2xl border border-[#103678]/12 bg-white px-6 py-3.5 text-sm font-semibold text-[#103678] hover:border-[#74b4d9]">
+            Open Dashboard
+          </a>
+        </div>
+        <div class="mt-12 grid gap-4 sm:grid-cols-3">
+          {% for item in hero_metrics %}
+            <div class="dashboard-panel rounded-2xl px-5 py-4">
+              <p class="text-2xl font-semibold text-[#103678]">{{ item.value }}</p>
+              <p class="mt-1 text-xs uppercase tracking-[0.18em] text-[#103678]/55">{{ item.label }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      
+      <div class="hero-visual">
+        <div class="dashboard-float self-start overflow-hidden rounded-[1.5rem] border border-[#103678]/10 bg-[linear-gradient(145deg,#ffffff,#eff6ff)] p-2 shadow-[0_26px_50px_rgba(16,54,120,0.16)] backdrop-blur-xl">
+          <div class="bg-[#eff6ff] p-1 text-center shadow-[0_18px_42px_rgba(16,54,120,0.12)] lg:h-full">
+            <img
+              src="{{ url_for('static', filename='images/dash.png') }}"
+              alt="Upload your Microsoft 365 dashboard image here"
+              class="h-[340px] w-full rounded-[1rem] object-contain lg:h-[540px]"
+            />
+            <p class="mt-3 text-xs uppercase tracking-[0.24em] text-[#103678]/60">.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-[#103678]/10 bg-white py-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 xl:px-16 2xl:px-20">
+        <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div class="flex flex-col gap-2 text-[#103678]/70" style="font-family:Manrope, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;">
+          <span class="text-[11px] font-semibold uppercase tracking-[0.26em]">Powered by</span>
+          <div class="flex flex-wrap items-center gap-y-2 text-[0.92rem] font-medium tracking-tight" style="gap:0.5rem 1.6rem;">
+            <span>Microsoft 365</span>
+            <span aria-hidden="true" class="text-[#103678]/25 text-[0.85em] leading-none" style="margin-inline:0.1rem;">•</span>
+            <span>Cloudflare</span>
+            <span aria-hidden="true" class="text-[#103678]/25 text-[0.85em] leading-none" style="margin-inline:0.1rem;">•</span>
+            <span>TechErra</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 md:flex-nowrap">
+          <div class="flex shrink-0 items-center gap-0.5">
+            <div class="flex-none rounded-full border-2 border-white text-[9px] font-bold leading-none text-white shadow-[0_10px_20px_rgba(16,54,120,0.14)]" style="width:1.75rem;height:1.75rem;display:flex;align-items:center;justify-content:center;background-color:#2aa9e0;">AK</div>
+            <div class="flex-none rounded-full border-2 border-white text-[9px] font-bold leading-none text-white shadow-[0_10px_20px_rgba(16,54,120,0.14)]" style="width:1.75rem;height:1.75rem;display:flex;align-items:center;justify-content:center;background-color:#21c18b;">LM</div>
+            <div class="flex-none rounded-full border-2 border-white text-[9px] font-bold leading-none text-white shadow-[0_10px_20px_rgba(16,54,120,0.14)]" style="width:1.75rem;height:1.75rem;display:flex;align-items:center;justify-content:center;background-color:#f0a51c;">RS</div>
+            <div class="flex-none rounded-full border-2 border-white text-[9px] font-bold leading-none text-white shadow-[0_10px_20px_rgba(16,54,120,0.14)]" style="width:1.75rem;height:1.75rem;display:flex;align-items:center;justify-content:center;background-color:#ef5b4f;">TC</div>
+          </div>
+
+          <div class="flex flex-col leading-none">
+            <span style="color:#f2b33f;font-size:15px;line-height:1;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <p class="mt-0.5 text-sm font-medium text-[#103678]/70">Trusted by 150+ businesses</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="enterprise-section py-28 text-[#103678]">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+      <div class="mb-12 max-w-3xl lg:max-w-none lg:pr-0">
+        <p class="text-xs uppercase tracking-[0.25em] text-[#74b4d9]">About KollraX</p>
+        <h2 class="mt-4 text-4xl font-semibold tracking-tight">What KollraX is</h2>
+        <p class="mt-4 text-[#103678]/72">
+          KollraX is a premium Microsoft 365 technology partner helping businesses modernize collaboration, strengthen security posture, and run cloud operations with confidence.
+        </p>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:pr-0">
+        <div class="grid gap-6">
+          <div class="premium-panel rounded-[1.75rem] p-7">
+            <p class="text-xs uppercase tracking-[0.2em] text-[#74b4d9]">Mission</p>
+            <p class="mt-3 text-lg text-[#103678]/74">
+              To deliver secure and scalable Microsoft 365 environments that improve productivity and reduce operational risk.
+            </p>
+          </div>
+          <div class="premium-panel rounded-[1.75rem] p-7">
+            <p class="text-xs uppercase tracking-[0.2em] text-[#74b4d9]">Vision</p>
+            <p class="mt-3 text-lg text-[#103678]/74">
+              To become the most trusted cloud productivity and security partner for growth-focused organizations.
+            </p>
+          </div>
+          <div class="premium-panel rounded-[1.75rem] p-7">
+            <h3 class="text-2xl font-semibold">Why KollraX</h3>
+            <div class="mt-4 space-y-3 text-[#103678]/78">
+              <p class="flex items-center gap-2">{{ icon("ShieldCheck") }} Security-led architecture and governance</p>
+              <p class="flex items-center gap-2">{{ icon("CheckCircle2") }} Reliable migration and support delivery model</p>
+              <p class="flex items-center gap-2">{{ icon("Sparkles") }} Deep Microsoft 365 technical expertise</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid gap-6">
+          <div class="overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_26px_70px_rgba(0,0,0,0.3)]">
+            <img src="{{ url_for('static', filename='images/kollrax-operations.jpg') }}" alt="KollraX development and operations team" class="h-full w-full object-cover" />
+          </div>
+          <div class="premium-panel rounded-[1.75rem] p-7">
+            <p class="text-xs uppercase tracking-[0.2em] text-[#74b4d9]">Development Team</p>
+            <p class="mt-3 text-sm text-[#103678]/72">
+              Our founders and engineers combine cloud architecture, security operations, and change-management expertise to execute enterprise rollouts from planning to managed support.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="premium-mesh premium-grid bg-gradient-to-b from-[#ebebeb] to-white py-28 text-[#103678]">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.28em] text-[#74b4d9]">Services</p>
+      <h2 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">Microsoft 365 service plans built to convert</h2>
+      <p class="mt-3 max-w-2xl text-[#103678]/75">Clear monthly plans for small, growing, and enterprise teams, with add-ons ready for upsell.</p>
+
+      <div class="mt-12 grid gap-6 xl:grid-cols-3">
+        {% for plan in service_plans %}
+          <div class="premium-panel group rounded-[1.75rem] p-7 transition-all hover:-translate-y-1 hover:shadow-[0_26px_54px_rgba(29,139,239,0.18)]">
+            <div class="flex items-center justify-between gap-4">
+              <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">{{ plan.best_for }}</p>
+              <span class="rounded-full border border-[#103678]/10 bg-[#ebebeb] px-3 py-1 text-[11px] font-medium text-[#103678]">{{ plan.response }}</span>
+            </div>
+            <h3 class="mt-4 text-2xl font-semibold">{{ plan.name }}</h3>
+            <p class="mt-3 text-3xl font-semibold text-[#103678]">{{ plan.price }}</p>
+            <div class="mt-6 space-y-3">
+              {% for item in plan.includes %}
+                <div class="flex items-start gap-3 text-sm text-[#103678]/78">
+                  <span class="mt-1 text-[#74b4d9]">{{ icon("CheckCircle2") }}</span>
+                  <span>{{ item }}</span>
+                </div>
+              {% endfor %}
+              {% if plan.excludes %}
+                <div class="pt-2">
+                  <p class="text-xs uppercase tracking-[0.2em] text-[#103678]/46">Not included</p>
+                  <div class="mt-3 space-y-2 text-sm text-[#103678]/68">
+                    {% for item in plan.excludes %}
+                      <div class="flex items-start gap-3">
+                        <span class="mt-1 text-[#74b4d9]">{{ icon("X") }}</span>
+                        <span>{{ item }}</span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-10 grid gap-6 lg:grid-cols-[1fr_0.64fr]">
+        <div class="rounded-[1.75rem] border border-[#103678]/10 bg-white p-7 shadow-[0_22px_48px_rgba(16,54,120,0.08)]">
+          <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Add-on services</p>
+          <div class="mt-5 space-y-3">
+            {% for item in add_on_services %}
+              <div class="rounded-2xl border border-[#103678]/10 bg-[#f7fbff] px-4 py-3 text-sm font-medium text-[#103678]">{{ item }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="rounded-[1.75rem] border border-[#103678]/10 bg-white p-7 shadow-[0_22px_48px_rgba(16,54,120,0.08)]">
+          <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Support promise</p>
+          <p class="mt-4 text-sm leading-7 text-[#103678]/74">
+            Every engagement is built around structured onboarding, visible progress, and fast follow-up.
+          </p>
+          <div class="mt-5 space-y-3">
+            <div class="rounded-2xl border border-[#103678]/10 bg-[#f7fbff] px-4 py-3 text-sm text-[#103678]">Operational clarity from intake to delivery</div>
+            <div class="rounded-2xl border border-[#103678]/10 bg-[#f7fbff] px-4 py-3 text-sm text-[#103678]">Security-first execution and tenant governance</div>
+            <div class="rounded-2xl border border-[#103678]/10 bg-[#f7fbff] px-4 py-3 text-sm text-[#103678]">Enterprise reporting and dependable support rhythm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="border-t border-[#10267d]/10 bg-white py-24 text-[#10267d];">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-10 rounded-[2rem] border border-[#10267d]/20 bg-white/90 p-8 shadow-[0_30px_90px_rgba(16,38,125,0.14)] backdrop-blur-xl ring-1 ring-[#10267d]/10 lg:grid-cols-[1.25fr_0.75fr] lg:items-center" style="box-shadow:0 40px 120px rgba(16,38,125,0.12);">
+        <div class="space-y-6">
+          <span class="inline-flex rounded-full bg-[#10267d]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#10267d]/90">Contact us</span>
+          <h2 class="max-w-3xl text-4xl font-semibold tracking-tight text-[#10267d] sm:text-5xl">Talk to a Microsoft 365 specialist today.</h2>
+          <p class="max-w-2xl text-base leading-8 text-[#10267d]/75">Fast responses over WhatsApp, email, and support requests. Let us help you map your migration, governance, and managed service plan with clarity.</p>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <a href="https://wa.me/2347085672506" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center rounded-2xl bg-[#10267d] px-6 py-4 text-center text-sm font-semibold text-white shadow-[0_22px_56px_rgba(16,38,125,0.18)] transition hover:-translate-y-0.5 hover:bg-[#0c1d4b]">Talk on WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="rounded-[2rem] border border-[#10267d]/15 bg-[#10267d]/95 p-7 shadow-[0_40px_100px_rgba(16,38,125,0.18)]">
+          <div class="space-y-5">
+            <div class="flex items-center gap-3">
+              <div>
+                <p class="text-lg font-semibold text-[#10267d]">KollraX</p>
+                <p class="text-xs uppercase tracking-[0.22em] text-[#10267d]/70">Microsoft 365 Operations</p>
+              </div>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-2">
+              <a href="mailto:support@kollrax.com">
+                <div class="rounded-3xl border border-[#10267d] bg-[#10267d] p-5">
+                <p class="text-xs uppercase tracking-[0.22em] text-white/70">Email</p>
+                <p class="mt-3 text-lg font-semibold text-white">support@kollrax.com</p>
+              </div>
+              </a>
+              <a href="tel:+2347085672506" class="block text-sm text-white/85 transition hover:text-white">
+                <div class="rounded-3xl border border-[#10267d] bg-[#10267d] p-5">
+                  <p class="text-xs uppercase tracking-[0.22em] text-white/70">WhatsApp</p>
+                  <p class="mt-3 text-lg font-semibold text-white">+234 708 567 2506</p>
+                </div>
+              </a>
+            </div>
+
+            <div class="rounded-3xl border border-white/15 bg-white/10 p-5">
+              <p class="text-xs uppercase tracking-[0.22em] text-white/70">Quick support</p>
+              <p class="mt-3 text-sm leading-6 text-white/80">Need faster onboarding support? We reply promptly across WhatsApp and email, with priority follow-up for new engagements.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 rounded-[2rem] bg-[#10267d] p-8 shadow-[0_30px_90px_rgba(16,38,125,0.2)] ring-1 ring-white/10 text-white">
+        <div class="grid gap-10 lg:grid-cols-[1.6fr_1fr_1fr]">
+          <div class="space-y-5">
+            <div class="flex items-center gap-3">
+              <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="h-10 w-10 object-contain" />
+            </div>
+            <p class="max-w-xl text-sm text-white/75">A modern operations partner for Microsoft 365 migrations, governance, and managed services. Fast responses, clearer outcomes, and support built for enterprise velocity.</p>
+          </div>
+
+          <div class="space-y-4">
+            <p class="text-sm font-semibold uppercase tracking-[0.24em] text-white/75">Explore</p>
+            <a href="{{ url_for('marketing') }}#services" class="block text-sm text-white/85 transition hover:text-white">Services</a>
+            <a href="{{ url_for('marketing') }}#about" class="block text-sm text-white/85 transition hover:text-white">About</a>
+            <a href="#contact" class="block text-sm text-white/85 transition hover:text-white">Contact</a>
+          </div>
+
+          <div class="space-y-4">
+            <p class="text-sm font-semibold uppercase tracking-[0.24em] text-white/75">Contact</p>
+            <a href="mailto:support@kollrax.com" class="block text-sm text-white/85 transition hover:text-white">support@kollrax.com</a>
+            <a href="tel:+2347085672506" class="block text-sm text-white/85 transition hover:text-white">+234 708 567 2506</a>
+            <a href="https://wa.me/2347085672506" target="_blank" rel="noopener noreferrer" class="block text-sm text-white/85 transition hover:text-white">Chat on WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="mt-10 border-t border-white/10 pt-6 text-sm text-white/70 sm:flex sm:items-center sm:justify-between">
+          <p>2026 KollraX, Inc. All rights reserved.</p>
+          <p>Security-forward cloud operations for modern business infrastructure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

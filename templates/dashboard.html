@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-shell relative min-h-screen overflow-hidden text-[#103678]">
+  <div class="pointer-events-none absolute inset-0">
+    <div class="premium-grid absolute inset-0 opacity-30"></div>
+    <div class="absolute left-[-8%] top-[-8rem] h-80 w-80 rounded-full bg-[#74b4d9]/18 blur-3xl"></div>
+    <div class="absolute right-[-10%] top-16 h-96 w-96 rounded-full bg-[#103678]/10 blur-3xl"></div>
+  </div>
+
+  <header class="sticky top-0 z-30 border-b border-white/10 bg-[#10267d] backdrop-blur-2xl">
+    <div class="mx-auto flex min-h-[4.75rem] w-full max-w-[min(100%,112rem)] items-center justify-between px-6 py-3 lg:px-8">
+      <a href="{{ url_for('marketing') }}" class="flex items-center gap-3">
+        <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="h-11 w-11 object-contain" />
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.24em] text-white">KollraX workspace</p>
+          <h1 class="text-lg font-semibold text-white">Client dashboard</h1>
+        </div>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="{{ url_for('marketing') }}" class="rounded-2xl border border-white/20 bg-white/8 px-3.5 py-2.5 text-sm font-medium text-white hover:border-[#74b4d9]">Public site</a>
+        <form action="{{ url_for('logout') }}" method="post">
+          <button class="premium-button-primary rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-white">Sign out</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative mx-auto w-full max-w-[min(100%,112rem)] px-6 py-8 lg:px-8">
+    <div class="client-command-surface rounded-[2rem] p-3 sm:p-4">
+      <div class="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)]">
+        <aside class="client-sidebar rounded-[1.6rem] p-4 xl:sticky xl:top-6 xl:self-start">
+          <div class="flex items-center gap-3 border-b border-[#103678]/8 pb-4">
+            <div class="admin-sidebar-badge">{{ icon("LayoutDashboard") }}</div>
+            <div>
+              <p class="text-lg font-semibold text-[#103678]">KollraX</p>
+              <p class="text-xs text-[#103678]/55">Client workspace</p>
+            </div>
+          </div>
+
+          <nav class="mt-5 space-y-1.5 text-sm">
+            <a class="client-quick-row" href="#overview">Overview {{ icon("LayoutDashboard") }}</a>
+            <a class="client-quick-row" href="#plans">Plans {{ icon("Wallet") }}</a>
+            <a class="client-quick-row" href="#billing">Billing {{ icon("ReceiptText") }}</a>
+            <a class="client-quick-row" href="#support">Support {{ icon("LifeBuoy") }}</a>
+            <a class="client-quick-row" href="#smart-intake">Smart intake {{ icon("Sparkles") }}</a>
+          </nav>
+
+          <div class="mt-8 rounded-[1.35rem] border border-[#103678]/10 bg-white/72 p-4 shadow-[0_16px_34px_rgba(16,54,120,0.06)]">
+            <p class="text-sm font-semibold text-[#103678]">Next action</p>
+            <p class="mt-1 text-xs text-[#103678]/55">Choose your plan, review pricing, and continue to checkout.</p>
+          </div>
+        </aside>
+
+        <section id="overview" class="space-y-4">
+          <div class="rounded-[1.6rem] border border-[#103678]/10 bg-white/80 p-5 shadow-[0_18px_40px_rgba(16,54,120,0.08)]">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-[0.28em] text-[#74b4d9]">Client workspace</p>
+                <h2 class="mt-2 text-3xl font-semibold text-[#103678] sm:text-4xl">Welcome back, {{ current_user.fullName if current_user else 'there' }}</h2>
+                <p class="mt-3 max-w-2xl text-sm text-[#103678]/75">Manage your Microsoft 365 plan, check live pricing, and continue your onboarding in one place.</p>
+              </div>
+              <a href="{{ url_for('checkout') }}" class="premium-button-primary rounded-2xl px-4 py-3 text-sm font-semibold text-white">Continue to checkout</a>
+            </div>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <article class="dashboard-panel rounded-[1.35rem] p-4"><p class="text-xs uppercase tracking-[0.18em] text-[#74b4d9]">Active plan</p><p class="mt-3 text-2xl font-semibold text-[#103678]">{{ selected_plan or 'Starter' }}</p><p class="mt-1 text-sm text-[#103678]/55">Current selected tier</p></article>
+            <article class="dashboard-panel rounded-[1.35rem] p-4"><p class="text-xs uppercase tracking-[0.18em] text-[#74b4d9]">Users</p><p class="mt-3 text-2xl font-semibold text-[#103678]">{{ selected_user_count }}</p><p class="mt-1 text-sm text-[#103678]/55">Microsoft 365 users</p></article>
+            <article class="dashboard-panel rounded-[1.35rem] p-4"><p class="text-xs uppercase tracking-[0.18em] text-[#74b4d9]">Monthly total</p><p class="mt-3 text-2xl font-semibold text-[#103678]">{{ billing_summary['monthly_total'] | format_currency }}</p><p class="mt-1 text-sm text-[#103678]/55">Recurring charge</p></article>
+            <article class="dashboard-panel rounded-[1.35rem] p-4"><p class="text-xs uppercase tracking-[0.18em] text-[#74b4d9]">First payment</p><p class="mt-3 text-2xl font-semibold text-[#103678]">{{ billing_summary['first_payment_total'] | format_currency }}</p><p class="mt-1 text-sm text-[#103678]/55">Initial invoice</p></article>
+          </div>
+
+          <div id="plans" class="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+            <section class="dashboard-panel rounded-[1.45rem] p-5">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Plan selection</p>
+                  <h3 class="mt-2 text-2xl font-semibold text-[#103678]">Choose your Microsoft 365 support plan</h3>
+                </div>
+                <span class="rounded-full bg-[#74b4d9]/18 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#103678]">Live</span>
+              </div>
+              <div class="mt-5 grid gap-4 lg:grid-cols-3">
+                {% for plan in billing_plans %}
+                  <article class="rounded-[1.35rem] border border-[#103678]/10 bg-white p-5 {% if selected_plan == plan.id %}ring-2 ring-[#74b4d9]{% endif %}">
+                    <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">{{ plan.badge }}</p>
+                    <h4 class="mt-3 text-xl font-semibold text-[#103678]">{{ plan.name }}</h4>
+                    <p class="mt-3 text-sm text-[#103678]/72">{{ plan.summary }}</p>
+                    <p class="mt-4 text-2xl font-semibold text-[#103678]">{% if plan.id == 'enterprise' %}₦8,000 – ₦12,000 / user / month{% else %}₦{{ "%d"|format(plan.price_per_user) }} / user / month{% endif %}</p>
+                    <ul class="mt-4 space-y-2 text-sm text-[#103678]/80">
+                      {% for feature in plan.features %}
+                        <li class="flex items-start gap-2"><span class="mt-1 text-[#74b4d9]">●</span><span>{{ feature }}</span></li>
+                      {% endfor %}
+                    </ul>
+                    <a href="{{ url_for('dashboard') }}?plan={{ plan.id }}&users={{ selected_user_count }}" class="mt-5 inline-flex w-full items-center justify-center rounded-2xl border border-[#103678]/12 bg-[#f7fbff] px-4 py-3 text-sm font-semibold text-[#103678] hover:border-[#74b4d9]">Select {{ plan.name }}</a>
+                  </article>
+                {% endfor %}
+              </div>
+            </section>
+
+            <section id="billing" class="dashboard-panel rounded-[1.45rem] p-5">
+              <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Billing details</p>
+              <h3 class="mt-2 text-2xl font-semibold text-[#103678]">Live quote</h3>
+              <form method="post" class="mt-5 space-y-5">
+                <label class="grid gap-2 text-sm text-[#103678]">Plan<select name="plan" class="dashboard-input rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none">{% for plan in billing_plans %}<option value="{{ plan.id }}" {% if selected_plan == plan.id %}selected{% endif %}>{{ plan.name }}</option>{% endfor %}</select></label>
+                <label class="grid gap-2 text-sm text-[#103678]">Active Microsoft 365 users<input name="user_count" type="number" min="1" value="{{ selected_user_count }}" class="dashboard-input rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none" /></label>
+                <div class="rounded-[1.25rem] border border-[#103678]/10 bg-[#f7fbff] p-4">
+                  <p class="text-xs uppercase tracking-[0.18em] text-[#74b4d9]">Quote breakdown</p>
+                  <div class="mt-4 space-y-3 text-sm text-[#103678]">
+                    <div class="flex items-center justify-between"><span>Monthly subscription</span><strong>{{ billing_summary['monthly_total'] | format_currency }}</strong></div>
+                    
+                    <div class="flex items-center justify-between"><span>Add-on services</span><strong>{{ billing_summary['addon_total'] | format_currency }}</strong></div>
+                    <div class="flex items-center justify-between border-t border-[#103678]/10 pt-3 text-base font-semibold"><span>First payment total</span><strong>{{ billing_summary['first_payment_total'] | format_currency }}</strong></div>
+                  </div>
+                </div>
+                <button type="submit" class="premium-button-primary w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white">Continue to checkout</button>
+              </form>
+            </section>
+          </div>
+
+          <section id="support" class="grid gap-4 xl:grid-cols-[1fr_1fr]">
+            <article class="dashboard-panel rounded-[1.45rem] p-5">
+              <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Support</p>
+              <h3 class="mt-2 text-2xl font-semibold text-[#103678]">Fast help for your rollout</h3>
+              <div class="mt-5 space-y-3 text-sm text-[#103678]/78">
+                <p>{{ icon("LifeBuoy") }} Priority email support for tenant issues and onboarding.</p>
+                <p>{{ icon("ShieldCheck") }} Security and compliance guidance from the KollraX team.</p>
+                <p>{{ icon("Workflow") }} Access to migration, deployment, and change management support.</p>
+              </div>
+            </article>
+            <article class="dashboard-panel rounded-[1.45rem] p-5">
+              <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Quick actions</p>
+              <div class="mt-4 space-y-3">
+                <a class="client-quick-row" href="{{ url_for('checkout') }}">Open checkout {{ icon("ArrowRight") }}</a>
+                <a class="client-quick-row" href="{{ url_for('contact') }}">Contact support {{ icon("Mail") }}</a>
+                <a class="client-quick-row" href="{{ url_for('marketing') }}">View public site {{ icon("ExternalLink") }}</a>
+              </div>
+            </article>
+          </section>
+
+          <section id="smart-intake" class="rounded-[1.6rem] border border-[#103678]/10 bg-white/90 p-5 shadow-[0_18px_40px_rgba(16,54,120,0.08)]">
+            <p class="text-xs uppercase tracking-[0.28em] text-[#74b4d9]">Smart intake</p>
+            <h3 class="mt-2 text-2xl font-semibold text-[#103678]">Let’s qualify your Microsoft 365 project fast</h3>
+            <p class="mt-3 text-sm text-[#103678]/75">Short steps, clear next action, and no awkward dead end after submission.</p>
+            <div class="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr]">
+              <article class="rounded-[1.35rem] border border-[#103678]/10 bg-[#f7fbff] p-4">...</article>
+              <article class="rounded-[1.35rem] border border-[#103678]/10 bg-white p-4">...</article>
+            </div>
+          </section>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

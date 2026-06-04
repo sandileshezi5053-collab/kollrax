@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="relative min-h-screen overflow-hidden bg-[#103678] px-6 py-20 text-[#103678] lg:px-8">
+  <div class="pointer-events-none absolute inset-0 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(29,129,228,0.12),transparent_24%),radial-gradient(circle_at_85%_12%,rgba(20,102,205,0.1),transparent_22%)]"></div>
+    <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px); background-size:96px 96px;"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-5xl">
+    <a href="{{ url_for('marketing') }}" class="mb-6 inline-flex text-sm font-medium text-[#ebebeb] hover:text-white">
+      Back
+    </a>
+
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_360px]">
+      <div class="premium-panel rounded-[2rem] p-8 text-[#103678] sm:p-10">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#74b4d9]">Smart Intake</p>
+        <h1 class="mt-4 text-4xl font-semibold tracking-tight text-[#103678]">Let&apos;s qualify your Microsoft 365 project fast</h1>
+        <p class="mt-3 max-w-2xl text-[#103678]/72">Short steps, clear next action, and no awkward dead-end after submission.</p>
+
+        {% if not done %}
+          <form id="intake-form" method="post" class="mt-10 grid gap-6">
+            <div class="rounded-[1.6rem] border border-[#103678]/10 bg-[#f7fbff] p-4">
+              <div class="flex items-center justify-between gap-3 text-sm text-[#103678]/72">
+                <span>Step <span data-contact-step-indicator>1</span> of 4</span>
+                <span data-contact-progress-label>25% complete</span>
+              </div>
+              <div class="mt-3 h-2 overflow-hidden rounded-full bg-[#103678]/10">
+                <div class="h-full rounded-full bg-[linear-gradient(90deg,#74b4d9,#ffffff)]" style="width: 25%;" data-contact-progress></div>
+              </div>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-4">
+              <button type="button" data-contact-step-btn="1" class="rounded-2xl border px-4 py-3 text-left text-sm border-[#74b4d9] bg-[#f3faff] text-[#103678]">
+                <span class="block text-[11px] uppercase tracking-[0.24em]">Step 1</span>
+                <span class="mt-1 block font-semibold">Contact</span>
+                <span class="mt-1 block text-xs text-[#103678]/55">Who should we reply to?</span>
+              </button>
+              <button type="button" data-contact-step-btn="2" class="rounded-2xl border px-4 py-3 text-left text-sm border-[#103678]/10 bg-white text-[#103678]/72">
+                <span class="block text-[11px] uppercase tracking-[0.24em]">Step 2</span>
+                <span class="mt-1 block font-semibold">Business</span>
+                <span class="mt-1 block text-xs text-[#103678]/55">Tell us about your team.</span>
+              </button>
+              <button type="button" data-contact-step-btn="3" class="rounded-2xl border px-4 py-3 text-left text-sm border-[#103678]/10 bg-white text-[#103678]/72">
+                <span class="block text-[11px] uppercase tracking-[0.24em]">Step 3</span>
+                <span class="mt-1 block font-semibold">Needs</span>
+                <span class="mt-1 block text-xs text-[#103678]/55">What do you want solved?</span>
+              </button>
+              <button type="button" data-contact-step-btn="4" class="rounded-2xl border px-4 py-3 text-left text-sm border-[#103678]/10 bg-white text-[#103678]/72">
+                <span class="block text-[11px] uppercase tracking-[0.24em]">Step 4</span>
+                <span class="mt-1 block font-semibold">Qualification</span>
+                <span class="mt-1 block text-xs text-[#103678]/55">Help us prioritize follow-up.</span>
+              </button>
+            </div>
+
+            <div data-contact-step-panel="1" class="grid gap-4">
+              <div>
+                <p class="text-lg font-semibold text-[#103678]">Contact details</p>
+                <p class="mt-1 text-sm text-[#103678]/64">We keep this short so your team can submit quickly.</p>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-2">
+                  <span class="text-sm font-medium text-[#103678]">Full name</span>
+                  <input required name="name" value="{{ form_data.get('name', '') }}" placeholder="Collins Adeyemi" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none placeholder:text-[#103678]/38" />
+                </label>
+                <label class="grid gap-2">
+                  <span class="text-sm font-medium text-[#103678]">Work email</span>
+                  <input required type="email" name="email" value="{{ form_data.get('email', '') }}" placeholder="you@company.com" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none placeholder:text-[#103678]/38" />
+                </label>
+                <label class="grid gap-2 sm:col-span-2">
+                  <span class="text-sm font-medium text-[#103678]">Phone or WhatsApp number</span>
+                  <input required name="phone" value="{{ form_data.get('phone', '') }}" placeholder="+234 801 234 5678" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none placeholder:text-[#103678]/38" />
+                  <span class="text-xs text-[#103678]/62">Fast WhatsApp follow-up usually converts better than waiting on email alone.</span>
+                </label>
+              </div>
+            </div>
+
+            <div data-contact-step-panel="2" class="grid gap-4">
+              <div>
+                <p class="text-lg font-semibold text-[#103678]">Business context</p>
+                <p class="mt-1 text-sm text-[#103678]/64">A little context helps us recommend the right plan much faster.</p>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-2">
+                  <span class="text-sm font-medium text-[#103678]">Company name</span>
+                  <input required name="company" value="{{ form_data.get('company', '') }}" placeholder="KollraX Ltd" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none placeholder:text-[#103678]/38" />
+                </label>
+                <label class="grid gap-2">
+                  <span class="text-sm font-medium text-[#103678]">Staff size</span>
+                  <select required name="staffSize" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none">
+                    <option value="">Select staff size</option>
+                    <option value="1-10" {% if form_data.get('staffSize') == '1-10' %}selected{% endif %}>1-10</option>
+                    <option value="11-50" {% if form_data.get('staffSize') == '11-50' %}selected{% endif %}>11-50</option>
+                    <option value="51-200" {% if form_data.get('staffSize') == '51-200' %}selected{% endif %}>51-200</option>
+                    <option value="201-500" {% if form_data.get('staffSize') == '201-500' %}selected{% endif %}>201-500</option>
+                    <option value="500+" {% if form_data.get('staffSize') == '500+' %}selected{% endif %}>500+</option>
+                  </select>
+                </label>
+                <label class="grid gap-2 sm:col-span-2">
+                  <span class="text-sm font-medium text-[#103678]">Do you already use Microsoft 365?</span>
+                  <select required name="usesMicrosoft365" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none">
+                    <option value="Yes" {% if form_data.get('usesMicrosoft365', 'Yes') == 'Yes' %}selected{% endif %}>We already use Microsoft 365</option>
+                    <option value="No" {% if form_data.get('usesMicrosoft365') == 'No' %}selected{% endif %}>We do not use Microsoft 365 yet</option>
+                    <option value="Not sure" {% if form_data.get('usesMicrosoft365') == 'Not sure' %}selected{% endif %}>Not sure</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div data-contact-step-panel="3" class="grid gap-4">
+              <div>
+                <p class="text-lg font-semibold text-[#103678]">Project needs</p>
+                <p class="mt-1 text-sm text-[#103678]/64">Choose everything that applies so we can route your request properly.</p>
+              </div>
+              <div class="grid gap-3 sm:grid-cols-2">
+                {% for need in ["Setup", "Migration", "Security", "Ongoing support"] %}
+                  <label class="flex items-center gap-3 rounded-2xl border border-[#103678]/10 bg-[#f7fbff] px-4 py-4 text-sm text-[#103678]">
+                    <input type="checkbox" name="needs" value="{{ need }}" {% if need == 'Migration' and not selected_needs %}checked{% endif %}{% if need in selected_needs %}checked{% endif %} class="h-4 w-4 accent-[#74b4d9]" />
+                    <span>{{ need }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+              <label class="grid gap-2">
+                <span class="text-sm font-medium text-[#103678]">Extra details</span>
+                <textarea name="message" placeholder="Tell us about your current environment, challenge, target timeline, or anything we should know before we call." rows="5" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none placeholder:text-[#103678]/38">{{ form_data.get('message', '') }}</textarea>
+              </label>
+            </div>
+
+            <div data-contact-step-panel="4" class="grid gap-4">
+              <div>
+                <p class="text-lg font-semibold text-[#103678]">Qualification</p>
+                <p class="mt-1 text-sm text-[#103678]/64">These answers help us prioritize the right response speed and package.</p>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-2">
+                  <span class="text-sm font-medium text-[#103678]">Budget range</span>
+                  <select required name="budgetRange" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none">
+                    <option value="">Select budget range</option>
+                    <option value="Under ₦500k" {% if form_data.get('budgetRange') == 'Under ₦500k' %}selected{% endif %}>Under ₦500k</option>
+                    <option value="₦500k - ₦2m" {% if form_data.get('budgetRange') == '₦500k - ₦2m' %}selected{% endif %}>₦500k - ₦2m</option>
+                    <option value="₦2m - ₦5m" {% if form_data.get('budgetRange') == '₦2m - ₦5m' %}selected{% endif %}>₦2m - ₦5m</option>
+                    <option value="₦5m+" {% if form_data.get('budgetRange') == '₦5m+' %}selected{% endif %}>₦5m+</option>
+                  </select>
+                </label>
+                <label class="grid gap-2">
+                  <span class="text-sm font-medium text-[#103678]">Urgency</span>
+                  <select required name="urgency" class="dashboard-input rounded-2xl px-4 py-3.5 text-sm text-[#103678] outline-none">
+                    <option value="ASAP" {% if form_data.get('urgency', 'ASAP') == 'ASAP' %}selected{% endif %}>ASAP</option>
+                    <option value="This week" {% if form_data.get('urgency') == 'This week' %}selected{% endif %}>This week</option>
+                    <option value="Just exploring" {% if form_data.get('urgency') == 'Just exploring' %}selected{% endif %}>Just exploring</option>
+                  </select>
+                </label>
+                <div class="rounded-[1.5rem] border border-[#103678]/10 bg-[#f7fbff] p-5 sm:col-span-2">
+                  <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#74b4d9]">Before you submit</p>
+                  <p class="mt-2 text-sm text-[#103678]/76">Users will immediately see a booking option and a WhatsApp shortcut after this step.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <p class="text-sm text-[#103678]/72" data-contact-step-help>Complete this step to keep moving.</p>
+              <div class="flex gap-3">
+                <button type="button" class="hidden rounded-2xl border border-[#103678]/12 bg-white px-5 py-3 text-sm font-semibold text-[#103678]" data-contact-prev>Back</button>
+                <button type="button" class="premium-button-primary rounded-2xl px-5 py-3 text-sm font-semibold text-white" data-contact-next>Continue</button>
+                <button type="submit" class="hidden premium-button-primary rounded-2xl px-5 py-3.5 text-sm font-semibold text-white" data-contact-submit>Submit and continue</button>
+              </div>
+            </div>
+          </form>
+        {% else %}
+          <div class="mt-10 space-y-5">
+            <div class="rounded-[1.6rem] border border-emerald-500/18 bg-emerald-50 p-5">
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Request received</p>
+              <h2 class="mt-2 text-2xl font-semibold text-[#103678]">Next step: book a quick consultation or chat instantly</h2>
+              <p class="mt-2 text-sm text-[#103678]/72">We&apos;ve queued your confirmation, created the lead in the admin pipeline, and will aim to reach out within 1-2 hours.</p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <a href="https://calendly.com/kollrax/15min" target="_blank" rel="noreferrer" class="rounded-[1.6rem] border border-[#103678]/10 bg-[#f7fbff] p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#74b4d9]">Option A</p>
+                <h3 class="mt-2 text-xl font-semibold text-[#103678]">Book a 15-minute call</h3>
+                <p class="mt-2 text-sm text-[#103678]/72">Great! Let&apos;s schedule a quick consultation to understand your needs.</p>
+                <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#103678]">Open Calendly {{ icon("ArrowUpRight") }}</span>
+              </a>
+
+              <a href="https://wa.me/2348012345678?text={{ whatsapp_message }}" target="_blank" rel="noreferrer" class="rounded-[1.6rem] border border-[#103678]/10 bg-[#f7fbff] p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#74b4d9]">Option B</p>
+                <h3 class="mt-2 text-xl font-semibold text-[#103678]">Chat with us instantly</h3>
+                <p class="mt-2 text-sm text-[#103678]/72">Use WhatsApp to reduce drop-off and keep the conversation moving immediately.</p>
+                <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#103678]">Open WhatsApp {{ icon("ArrowUpRight") }}</span>
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="space-y-4">
+        <div class="premium-panel rounded-[2rem] p-6 text-[#103678]">
+          <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[#74b4d9]">Why this feels easier</p>
+          <div class="mt-4 space-y-3 text-sm text-[#103678]/76">
+            <p>Each step focuses on one decision, so users are not hit with one long wall of fields.</p>
+            <p>Phone, urgency, and service needs are captured early for faster qualification.</p>
+            <p>After submission, users get an immediate action instead of a dead-end thank-you page.</p>
+          </div>
+        </div>
+
+        <div class="premium-panel rounded-[2rem] p-6 text-[#103678]">
+          <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[#74b4d9]">What happens next</p>
+          <div class="mt-4 space-y-3 text-sm text-[#103678]/76">
+            <p>Your lead is stored with phone, needs, budget, and urgency.</p>
+            <p>The admin dashboard can move it from New Lead to Contacted, Consultation Booked, Proposal Sent, and Closed.</p>
+            <p>Fast follow-up is the point: call or WhatsApp within 5-15 minutes for the best conversion rate.</p>
+          </div>
+        </div>
+
+        <div class="premium-panel rounded-[2rem] p-6 text-[#103678]">
+          <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[#74b4d9]">Pipeline</p>
+          <div class="mt-4 space-y-3">
+            {% for item in ["New Lead", "Contacted", "Consultation Booked", "Proposal Sent", "Closed"] %}
+              <div class="rounded-2xl border border-[#103678]/10 bg-[#f7fbff] px-4 py-3 text-sm font-medium">{{ item }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

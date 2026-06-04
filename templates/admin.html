@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-shell relative min-h-screen overflow-hidden">
+  <div class="pointer-events-none absolute inset-0">
+    <div class="premium-grid absolute inset-0 opacity-30"></div>
+    <div class="absolute left-[-8%] top-[-8rem] h-80 w-80 rounded-full bg-[#74b4d9]/18 blur-3xl"></div>
+    <div class="absolute right-[-10%] top-16 h-96 w-96 rounded-full bg-[#103678]/10 blur-3xl"></div>
+  </div>
+
+  <header class="sticky top-0 z-30 border-b border-white/10 bg-[#10267d] backdrop-blur-2xl">
+    <div class="mx-auto flex min-h-[4.75rem] w-full max-w-[min(100%,112rem)] items-center justify-between px-6 py-3 lg:px-8">
+      <div class="flex items-center gap-3">
+        <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="h-11 w-11 object-contain" />
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.24em] text-white">KollraX workspace</p>
+          <h1 class="text-lg font-semibold text-white">KollraX Admin Command</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        {% if current_user %}
+          <div class="hidden items-center gap-3 rounded-2xl border border-white/20 bg-white/8 px-4 py-2 shadow-[0_16px_34px_rgba(16,54,120,0.08)] lg:flex">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-sm font-semibold text-white">
+              {{ current_user.fullName[:1] }}
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-white">{{ current_user.fullName }}</p>
+              <p class="text-xs uppercase tracking-[0.16em] text-white/70">{{ current_user.role }} account</p>
+            </div>
+          </div>
+        {% endif %}
+        <a href="{{ url_for('marketing') }}" class="rounded-2xl border border-white/20 bg-white/8 px-3.5 py-2.5 text-sm font-medium text-white shadow-[0_10px_24px_rgba(16,54,120,0.05)] hover:border-[#74b4d9]">
+          Public site
+        </a>
+        <form action="{{ url_for('logout') }}" method="post">
+          <button class="premium-button-primary rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-white">
+            <span class="inline-flex items-center gap-2">{{ icon("LogOut") }} Sign out</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative mx-auto w-full px-6 py-8 lg:px-8 max-w-[min(100%,112rem)]">
+    <div class="admin-command-surface admin-laptop-compact rounded-[2rem] p-3 sm:p-4">
+      <div class="admin-layout-grid grid gap-4 xl:grid-cols-[240px_minmax(0,1fr)]">
+        <aside class="admin-sidebar rounded-[1.6rem] p-4 xl:sticky xl:top-6 xl:self-start">
+          <div class="flex items-center gap-3 border-b border-[#103678]/8 pb-4">
+            <div class="admin-sidebar-badge">{{ icon("LayoutDashboard") }}</div>
+            <div>
+              <p class="text-lg font-semibold text-[#103678]">KollraX</p>
+              <p class="text-xs text-[#103678]/55">Admin workspace</p>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <button type="button" class="admin-sidebar-group" data-collapse-toggle="core-nav">
+              <span>Core Navigation</span>
+              <span class="transition-transform" data-collapse-chevron="core-nav">{{ icon("ChevronDown") }}</span>
+            </button>
+            <div class="mt-2 space-y-1.5" data-collapse-panel="core-nav">
+              <a href="#" class="admin-vertical-link border-[#74b4d9]/45 bg-[linear-gradient(135deg,rgba(116,180,217,0.24),rgba(255,255,255,0.9))]">Overview {{ icon("LayoutDashboard") }}</a>
+              <a href="#user-management" class="admin-vertical-link">User Management {{ icon("Users") }}</a>
+              <a href="#subscriptions" class="admin-vertical-link">Subscription {{ icon("Wallet") }}</a>
+            </div>
+          </div>
+
+          <!-- Simplified sidebar: Overview, User Management, Subscription -->
+        </aside>
+
+        <div class="space-y-4">
+          <div class="admin-dashboard-frame rounded-[1.8rem] p-4 sm:p-5">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div class="flex items-center gap-2 text-sm text-[#103678]/54">
+                  <span>Dashboard</span>
+                  <span>/</span>
+                  <span class="rounded-full bg-white/80 px-2 py-1 text-[11px] text-[#103678]/82">Overview</span>
+                </div>
+                <h2 class="mt-2 text-[1.55rem] font-semibold text-[#103678]">Dashboard</h2>
+              </div>
+            </div>
+
+            {% if notice %}
+              <div class="mt-4 rounded-[1rem] border border-[#74b4d9]/25 bg-white/82 px-4 py-3 text-sm text-[#103678]">
+                {{ notice }}
+              </div>
+            {% endif %}
+
+            <div class="mt-5 grid gap-4 md:grid-cols-2">
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <p class="text-lg font-semibold text-[#103678]">Overview</p>
+                <p class="mt-2 text-2xl font-semibold text-[#103678]">{{ monthly_recurring_revenue | format_currency }}</p>
+                <p class="text-sm text-[#103678]/54">Total MRR • {{ state.users|length }} users</p>
+              </div>
+
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <p class="text-lg font-semibold text-[#103678]">Subscriptions Overview</p>
+                <div class="mt-3 space-y-3">
+                  {% for plan in subscription_plans %}
+                    <div>
+                      <div class="flex items-center justify-between text-sm">
+                        <span class="text-[#103678]/88">{{ plan.plan }}</span>
+                        <span class="text-[#103678]/44">{{ (plan.health * 100) | round(0) }}%</span>
+                      </div>
+                      <div class="h-2 overflow-hidden rounded-full bg-[#103678]/8 mt-2">
+                        <div class="h-full rounded-full bg-[linear-gradient(90deg,#1d81e4,#48d1ff)]" style="width: {{ (plan.health * 100) | round(0) }}%"></div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 admin-panel rounded-[1.35rem] p-4">
+              <div class="flex items-center justify-between">
+                <p class="text-lg font-semibold text-[#103678]">User Management</p>
+                <p class="text-sm text-[#103678]/54">Manage workspace users</p>
+              </div>
+              <div class="mt-4 overflow-hidden rounded-[1rem] border border-[#103678]/8 bg-white/72">
+                <div class="grid grid-cols-4 border-b border-[#103678]/8 bg-[#f7fbff] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#103678]/44">
+                  <span>Name</span>
+                  <span>Email</span>
+                  <span>Role</span>
+                  <span>Actions</span>
+                </div>
+                {% for user in state.users %}
+                  <form method="post" class="grid grid-cols-4 items-center border-b border-[#103678]/8 px-4 py-3 text-sm last:border-b-0">
+                    <input type="hidden" name="action" value="admin_user_action" />
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+                    <div class="font-medium text-[#103678]">{{ user.fullName }}</div>
+                    <div class="text-[#103678]/68">{{ user.email }}</div>
+                    <div class="text-[#103678]/68">
+                      <select name="role" class="admin-inline-select">
+                        <option value="client" {% if user.role == 'client' %}selected{% endif %}>Client</option>
+                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                      </select>
+                    </div>
+                    <div class="text-[#103678]/68 flex items-center gap-2">
+                      <button type="submit" name="op" value="save" class="admin-table-action">Save</button>
+                      <button type="submit" name="op" value="toggle_active" class="admin-table-action">Toggle Active</button>
+                    </div>
+                  </form>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-lg font-semibold text-[#103678]">Data Table Management</p>
+                  {{ icon("MoreHorizontal") }}
+                </div>
+                <div class="mt-4 flex flex-col gap-3 lg:flex-row">
+                  <div class="admin-table-search">
+                    {{ icon("Search") }}
+                    <input value="" placeholder="Search" class="w-full bg-transparent text-sm text-[#103678] outline-none placeholder:text-[#103678]/26" />
+                  </div>
+                  <button type="button" class="admin-primary-button">Filter</button>
+                </div>
+                <div class="mt-4 overflow-hidden rounded-[1rem] border border-[#103678]/8 bg-white/72">
+                  <div class="grid grid-cols-4 border-b border-[#103678]/8 bg-[#f7fbff] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#103678]/44">
+                    <span>Name</span>
+                    <span>Email</span>
+                    <span>Role</span>
+                    <span>Status</span>
+                  </div>
+                  {% for user in state.users %}
+                    <div class="grid grid-cols-4 items-center border-b border-[#103678]/8 px-4 py-3 text-sm last:border-b-0">
+                      <span class="font-medium text-[#103678]">{{ user.fullName }}</span>
+                      <span class="text-[#103678]/68">{{ user.email }}</span>
+                      <span class="text-[#103678]/68">{{ user.role }}</span>
+                      <span class="text-[#103678]/68">{{ 'Review' if user.role == 'admin' else 'Required' }}</span>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-lg font-semibold text-[#103678]">Consultation Pipeline</p>
+                    <p class="mt-1 text-sm text-[#103678]/46">Smart intake submissions, qualification, and fast follow-up ownership.</p>
+                  </div>
+                  <button class="admin-secondary-button" type="button">{{ icon("Users") }} {{ active_clients }} clients</button>
+                </div>
+
+                <div class="mt-4 space-y-3">
+                  {% for lead in consultations %}
+                    <div class="rounded-[1rem] border border-[#103678]/8 bg-white/72 p-3">
+                      <div class="flex items-start justify-between gap-3">
+                        <div>
+                          <p class="text-sm font-medium text-[#103678]">{{ lead.name }}</p>
+                          <p class="mt-1 text-xs text-[#103678]/52">{{ lead.company }} · {{ lead.focus }}</p>
+                        </div>
+                        <span class="rounded-full bg-[#74b4d9]/18 px-3 py-1 text-xs font-medium text-[#103678]">{{ lead.stage }}</span>
+                      </div>
+                      <div class="mt-2 grid gap-1 text-sm text-[#103678]/68">
+                        <p>{{ lead.message }}</p>
+                        <p>Phone: {{ lead.phone or "Not captured" }} · Staff: {{ lead.staffSize }}</p>
+                        <p>Budget: {{ lead.budgetRange }} · Urgency: {{ lead.urgency }}</p>
+                      </div>
+                      <form method="post" class="mt-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+                        <input type="hidden" name="action" value="update_lead" />
+                        <input type="hidden" name="lead_id" value="{{ lead.id }}" />
+                        <select name="stage" class="admin-inline-select">
+                          {% for option in ["New Lead", "Contacted", "Consultation Booked", "Proposal Sent", "Closed"] %}
+                            <option value="{{ option }}" {% if option == lead.stage %}selected{% endif %}>{{ option }}</option>
+                          {% endfor %}
+                        </select>
+                        <input name="owner" value="{{ lead.owner }}" placeholder="Owner" class="admin-table-search" />
+                        <button class="admin-table-action" type="submit">Update</button>
+                      </form>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 grid gap-4 xl:grid-cols-[1.25fr_1fr]">
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-lg font-semibold text-[#103678]">Support Workflow</p>
+                  {{ icon("MoreHorizontal") }}
+                </div>
+                <div class="mt-4 space-y-3">
+                  {% for ticket in state.tickets %}
+                    <form method="post" class="rounded-[1rem] border border-[#103678]/8 bg-white/72 p-3">
+                      <input type="hidden" name="action" value="update_ticket" />
+                      <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
+                      <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p class="text-sm font-medium text-[#103678]">{{ ticket.subject }}</p>
+                          <p class="mt-1 text-xs text-[#103678]/36">{{ ticket.id }} - {{ ticket.priority }} priority</p>
+                        </div>
+                        <select name="status" class="admin-inline-select">
+                          {% for option in ["Open", "In Progress", "Resolved"] %}
+                            <option value="{{ option }}" {% if option == ticket.status %}selected{% endif %}>{{ option }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+                        <input name="reply" placeholder="Add admin reply" class="admin-table-search" />
+                        <button type="submit" class="admin-primary-button">Send reply</button>
+                      </div>
+                    </form>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-lg font-semibold text-[#103678]">Microsoft 365 Services</p>
+                    <p class="mt-1 text-sm text-[#103678]/46">Service requests, migration operations, deployment tracking, and onboarding workflow.</p>
+                  </div>
+                  <button class="admin-secondary-button" type="button">{{ icon("Cloud") }} {{ enabled_services }}/{{ state.services|length }} active</button>
+                </div>
+                <div class="mt-4 space-y-3">
+                  {% for service in state.services %}
+                    <form method="post" class="rounded-[1rem] border border-[#103678]/8 bg-white/72 p-3">
+                      <input type="hidden" name="action" value="toggle_service" />
+                      <input type="hidden" name="service_id" value="{{ service.id }}" />
+                      <div class="flex items-start justify-between gap-3">
+                        <div>
+                          <p class="text-sm font-medium text-[#103678]">{{ service.title }}</p>
+                          <p class="mt-1 text-xs text-[#103678]/54">{{ service.description }}</p>
+                        </div>
+                        <button type="submit" class="admin-table-action">{{ 'Enabled' if service.enabled else 'Disabled' }}</button>
+                      </div>
+                    </form>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 grid gap-4 xl:grid-cols-[1fr_1fr_1fr]">
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-lg font-semibold text-[#103678]">Payments and Billing</p>
+                    <p class="mt-1 text-sm text-[#103678]/46">Payment tracking, invoice overview, and recurring billing management.</p>
+                  </div>
+                  {{ icon("Wallet") }}
+                </div>
+                <div class="mt-4 space-y-3">
+                  {% for payment in payment_records %}
+                    <div class="rounded-[1rem] border border-[#103678]/8 bg-white/72 p-3">
+                      <div class="flex items-start justify-between gap-3">
+                        <div>
+                          <p class="text-sm font-medium text-[#103678]">{{ payment.id }}</p>
+                          <p class="mt-1 text-xs text-[#103678]/54">{{ payment.client }} · {{ payment.gateway }}</p>
+                        </div>
+                        <span class="rounded-full bg-[#74b4d9]/18 px-3 py-1 text-xs font-medium text-[#103678]">{{ payment_statuses[payment.id] }}</span>
+                      </div>
+                      <p class="mt-2 text-sm font-semibold text-[#103678]">{{ payment.amount | format_currency }}</p>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-lg font-semibold text-[#103678]">Content Management</p>
+                    <p class="mt-1 text-sm text-[#103678]/46">Manage website content, testimonials, FAQs, service information, announcements, and blog architecture.</p>
+                  </div>
+                  {{ icon("Bot") }}
+                </div>
+                <form method="post" class="mt-4 space-y-3">
+                  <input type="hidden" name="action" value="save_content" />
+                  <label class="grid gap-2">
+                    <span class="text-sm font-medium text-[#103678]">Content area</span>
+                    <select name="content_area" class="admin-inline-select">
+                      {% for item in state.content_entries.keys() %}
+                        <option value="{{ item }}">{{ item }}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+                  <label class="grid gap-2">
+                    <span class="text-sm font-medium text-[#103678]">Draft</span>
+                    <textarea name="draft" rows="6" class="dashboard-input rounded-2xl px-4 py-3 text-sm outline-none">{{ state.content_entries["Website content"] }}</textarea>
+                  </label>
+                  <div class="flex justify-end">
+                    <button type="submit" class="admin-primary-button">Save draft</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-lg font-semibold text-[#103678]">System Management</p>
+                    <p class="mt-1 text-sm text-[#103678]/46">Audit logs, permissions, security overview, notification system, and platform settings.</p>
+                  </div>
+                  {{ icon("ShieldCheck") }}
+                </div>
+                <div class="mt-4 space-y-3">
+                  {% for item in permission_items %}
+                    <div class="rounded-[1rem] border border-[#103678]/8 bg-white/72 px-4 py-3 text-sm text-[#103678]/78">{{ item }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 grid gap-4 xl:grid-cols-[1.25fr_1fr]">
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-lg font-semibold text-[#103678]">Notifications Center</p>
+                    <p class="mt-1 text-sm text-[#103678]/46">Announcements, alerts, platform notices, and admin follow-up triggers.</p>
+                  </div>
+                  {{ icon("Bell") }}
+                </div>
+                <div class="mt-4 space-y-3">
+                  {% for item in notification_items %}
+                    <div class="rounded-[1rem] border border-[#103678]/8 bg-white/72 px-4 py-3 text-sm text-[#103678]/78">{{ item }}</div>
+                  {% endfor %}
+                </div>
+                <form method="post" class="mt-4 grid gap-3">
+                  <input type="hidden" name="action" value="send_notification" />
+                  <input name="title" placeholder="Notification title" class="admin-table-search" />
+                  <select name="audience" class="admin-inline-select">
+                    <option>All workspace users</option>
+                    <option>Admins only</option>
+                    <option>Lead follow-up team</option>
+                  </select>
+                  <textarea name="message" placeholder="Compose a platform-wide notification" rows="3" class="dashboard-input rounded-2xl px-4 py-3 text-sm outline-none"></textarea>
+                  <div class="flex justify-end">
+                    <button class="admin-primary-button" type="submit">{{ icon("Mail") }} Send notification</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="admin-panel rounded-[1.35rem] p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-lg font-semibold text-[#103678]">Architecture Notes</p>
+                  {{ icon("MoreHorizontal") }}
+                </div>
+                <div class="mt-4 space-y-3">
+                  {% for item in ["Paystack integration architecture", "Flutterwave integration architecture", "Recurring billing orchestration", "Microsoft 365 onboarding workflow", "Audit logs and notification system"] %}
+                    <div class="rounded-[1rem] border border-[#103678]/8 bg-white/72 px-4 py-3 text-sm text-[#103678]/78">{{ item }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

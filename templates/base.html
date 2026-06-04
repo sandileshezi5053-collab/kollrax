@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title or "KollraX" }}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}" />
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </head>
+  <body class="{{ body_class or '' }}">
+    <div id="page-loader" class="page-loader-overlay">
+      <div class="page-loader-card">
+        <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX logo" class="page-loader-logo" />
+        <div class="page-loader-ring"></div>
+      </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="fixed right-4 top-4 z-[70] flex w-[min(100%,24rem)] flex-col gap-3">
+          {% for category, message in messages %}
+            <div class="rounded-2xl border border-[#103678]/10 bg-white/95 px-4 py-3 text-sm text-[#103678] shadow-[0_16px_34px_rgba(16,54,120,0.1)] backdrop-blur">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,128 @@
+{
+  "users": [
+    {
+      "id": "admin-1",
+      "memberCode": "K-53522",
+      "fullName": "KollraX Admin",
+      "email": "admin@kollrax.com",
+      "password": "Admin@123",
+      "company": "KollraX",
+      "role": "admin",
+      "avatar": null,
+      "createdAt": "2026-06-03T23:35:25.544294"
+    },
+    {
+      "id": "client-1",
+      "memberCode": "K-78215",
+      "fullName": "Elena Watson",
+      "email": "elena@northbridge.co",
+      "password": "Client@123",
+      "company": "Northbridge Partners",
+      "role": "client",
+      "avatar": null,
+      "createdAt": "2026-06-03T23:35:25.544294",
+      "active": false
+    },
+    {
+      "id": "USR-E979DD",
+      "memberCode": "K-23518",
+      "fullName": "chinedu ukpe",
+      "email": "famousukpe@outlook.com",
+      "password": "123456",
+      "company": "trackme",
+      "role": "client",
+      "avatar": "images/avatars/USR-E979DD.jpg",
+      "createdAt": "2026-06-03T23:41:49.097370"
+    }
+  ],
+  "tickets": [
+    {
+      "id": "TK-1001",
+      "userId": "client-1",
+      "subject": "Microsoft 365 migration planning",
+      "category": "Service Request",
+      "priority": "High",
+      "message": "Need a staged migration approach for 140 users across three regions.",
+      "status": "In Progress",
+      "createdAt": "2026-06-01T23:35:25.544294",
+      "updates": [
+        {
+          "by": "KollraX Admin",
+          "role": "admin",
+          "message": "Discovery workshop has been scheduled for Thursday 10:00 AM.",
+          "createdAt": "2026-06-02T23:35:25.544294"
+        }
+      ]
+    }
+  ],
+  "leads": [
+    {
+      "id": "LD-3001",
+      "name": "Riley Henderson",
+      "email": "riley@altitudebio.io",
+      "phone": "+234 801 234 5678",
+      "company": "Altitude Bio",
+      "staffSize": "51-200",
+      "usesMicrosoft365": "Yes",
+      "needs": [
+        "Security",
+        "Ongoing support"
+      ],
+      "budgetRange": "₦2m - ₦5m",
+      "urgency": "This week",
+      "focus": "Security and compliance",
+      "message": "We need compliance hardening and managed support for a regulated team.",
+      "stage": "Contacted",
+      "owner": "Collins",
+      "createdAt": "2026-05-31T23:35:25.544294"
+    }
+  ],
+  "services": [
+    {
+      "id": "starter-plan",
+      "title": "Starter Plan",
+      "description": "₦50,000/month for small businesses with basic Microsoft 365 admin and email support.",
+      "enabled": true
+    },
+    {
+      "id": "business-plan",
+      "title": "Business Plan",
+      "description": "₦100,000/month for growing teams that need tenant management, baseline security, and faster support.",
+      "enabled": true
+    },
+    {
+      "id": "enterprise-plan",
+      "title": "Enterprise Plan",
+      "description": "₦250,000/month+ for larger organizations that need compliance, migration support, and priority SLA coverage.",
+      "enabled": true
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notice-0",
+      "title": "Platform Notice 1",
+      "message": "2 high-priority support tickets require admin review.",
+      "audience": "Admin feed"
+    },
+    {
+      "id": "notice-1",
+      "title": "Platform Notice 2",
+      "message": "One consultation lead needs follow-up assignment today.",
+      "audience": "Admin feed"
+    },
+    {
+      "id": "notice-2",
+      "title": "Platform Notice 3",
+      "message": "Subscription renewal batch scheduled for tonight at 21:00.",
+      "audience": "Admin feed"
+    }
+  ],
+  "content_entries": {
+    "Website content": "Refresh homepage positioning for Microsoft 365 managed operations and enterprise support.",
+    "Testimonials": "Highlight recent migration delivery wins and managed support satisfaction notes.",
+    "FAQs": "Add billing, onboarding, and compliance workflow questions for enterprise buyers.",
+    "Service information": "Clarify migration, deployment, compliance, and consultation engagement stages.",
+    "Announcements": "Prepare admin-controlled platform notices for maintenance windows and release changes.",
+    "Blog/news architecture": "Outline publishing workflow for insights, updates, and thought leadership content."
+  }
+}

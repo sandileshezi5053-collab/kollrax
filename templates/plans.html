@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-[linear-gradient(180deg,#edf4ff_0%,#ffffff_40%,#f8fbff_100%)] text-[#103678]">
+  <header class="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#10267d] backdrop-blur-xl">
+    <nav class="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-6 lg:px-8">
+      <a href="{{ url_for('marketing') }}" class="flex items-center gap-3">
+        <img src="{{ url_for('static', filename='images/kollrax-logo-site.png') }}" alt="KollraX" class="h-11 w-11 object-contain" />
+        <div>
+          <span class="block text-lg font-semibold tracking-tight text-white">KollraX</span>
+          <span class="hidden text-[10px] uppercase tracking-[0.28em] text-white sm:block">Microsoft 365 Billing</span>
+        </div>
+      </a>
+
+      <div class="hidden items-center gap-8 md:flex">
+        <a href="{{ url_for('marketing') }}#home" class="text-sm font-medium text-white transition hover:text-white/80">Home</a>
+        <a href="{{ url_for('marketing') }}#services" class="text-sm font-medium text-white transition hover:text-white/80">Services</a>
+        <a href="{{ url_for('marketing') }}#about" class="text-sm font-medium text-white transition hover:text-white/80">About</a>
+        <a href="{{ url_for('marketing') }}#contact" class="text-sm font-medium text-white transition hover:text-white/80">Contact</a>
+      </div>
+
+      <div class="hidden items-center gap-3 md:flex">
+        {% if current_user %}
+          <a href="{{ url_for('admin_dashboard') }}" class="rounded-2xl border border-white/20 bg-white/8 px-4 py-2.5 text-sm font-medium text-white hover:border-[#74b4d9]">Admin</a>
+          <form action="{{ url_for('logout') }}" method="post">
+            <button class="premium-button-primary rounded-2xl px-4 py-2.5 text-sm font-semibold text-white">Sign out</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="rounded-2xl border border-white/20 bg-white/8 px-4 py-2.5 text-sm font-medium text-white hover:border-[#74b4d9]">Login</a>
+        {% endif %}
+      </div>
+
+      <button class="md:hidden rounded-2xl border border-white/20 bg-white/8 px-3 py-2 text-white" data-nav-toggle aria-label="Open navigation">
+        {{ icon("Menu") }}
+      </button>
+    </nav>
+
+    <div class="hidden border-t border-white/10 bg-[#10267d] px-6 py-4 md:hidden" data-nav-panel>
+      <div class="mx-auto flex max-w-7xl flex-col gap-3">
+        <a href="{{ url_for('marketing') }}#home" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Home</a>
+        <a href="{{ url_for('marketing') }}#services" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Services</a>
+        <a href="{{ url_for('marketing') }}#about" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">About</a>
+        <a href="{{ url_for('marketing') }}#contact" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Contact</a>
+        {% if current_user %}
+          <a href="{{ url_for('admin_dashboard') }}" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Admin</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-white">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-12 lg:px-8">
+    <section class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+      <div class="space-y-6">
+        <p class="text-xs uppercase tracking-[0.28em] text-[#74b4d9]">Plan Selection</p>
+        <h1 class="max-w-2xl text-4xl font-semibold tracking-tight text-[#103678] sm:text-5xl">Choose your Microsoft 365 support plan and user count.</h1>
+        <p class="max-w-2xl text-base leading-7 text-[#103678]/75">Billing is based on the number of active Microsoft 365 users in your tenant. Starter has a minimum of 3 users and a minimum monthly charge of ₦15,000.</p>
+
+        <div class="grid gap-5 lg:grid-cols-3">
+          {% for plan in billing_plans %}
+            <article class="premium-panel rounded-[1.75rem] p-6 {% if selected_plan == plan.id %}ring-2 ring-[#74b4d9]{% endif %}">
+              <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">{{ plan.badge }}</p>
+              <h2 class="mt-3 text-2xl font-semibold text-[#103678]">{{ plan.name }}</h2>
+              <p class="mt-3 text-sm text-[#103678]/72">{{ plan.summary }}</p>
+              <p class="mt-5 text-3xl font-semibold text-[#103678]">{% if plan.id == 'enterprise' %} ₦8,000 – ₦12,000 / user / month {% else %} ₦{{ "%d"|format(plan.price_per_user) }} / user / month {% endif %}</p>
+              <p class="mt-2 text-xs uppercase tracking-[0.18em] text-[#103678]/55">{{ plan.response }}</p>
+              <ul class="mt-5 space-y-2 text-sm text-[#103678]/80">
+                {% for feature in plan.features %}
+                  <li class="flex items-start gap-2"><span class="mt-1 text-[#74b4d9]">●</span><span>{{ feature }}</span></li>
+                {% endfor %}
+              </ul>
+              <a href="{{ url_for('plan_selection') }}?plan={{ plan.id }}&users={{ selected_user_count }}" class="mt-6 inline-flex w-full items-center justify-center rounded-2xl border border-[#103678]/12 bg-white px-4 py-3 text-sm font-semibold text-[#103678] hover:border-[#74b4d9]">Select {{ plan.name }}</a>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      <aside class="dashboard-panel rounded-[1.75rem] p-6 shadow-[0_24px_56px_rgba(16,54,120,0.12)]">
+        <p class="text-xs uppercase tracking-[0.24em] text-[#74b4d9]">Live quote</p>
+        <h2 class="mt-3 text-2xl font-semibold text-[#103678]">Your pricing summary</h2>
+        <form method="post" class="mt-6 space-y-6">
+          <div>
+            <label for="plan" class="text-sm font-semibold text-[#103678]">Plan</label>
+            <select id="plan" name="plan" class="dashboard-input mt-2 w-full rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none">
+              {% for plan in billing_plans %}
+                <option value="{{ plan.id }}" {% if selected_plan == plan.id %}selected{% endif %}>{{ plan.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label for="user_count" class="text-sm font-semibold text-[#103678]">Active Microsoft 365 users</label>
+            <input id="user_count" name="user_count" type="number" min="1" value="{{ selected_user_count }}" class="dashboard-input mt-2 w-full rounded-2xl px-4 py-3 text-sm text-[#103678] outline-none" />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-[#103678]">Optional one-time add-ons</label>
+            <div class="mt-3 space-y-2">
+              {% for addon in billing_addons %}
+                <label class="flex items-start gap-3 rounded-2xl border border-[#103678]/10 bg-white px-4 py-3 text-sm text-[#103678]">
+                  <input type="checkbox" name="addons" value="{{ addon.id }}" {% if addon.id in selected_addons %}checked{% endif %} class="mt-1 rounded border-[#103678]/20 text-[#74b4d9] focus:ring-[#74b4d9]" />
+                  <span>{{ addon.name }} — {{ addon.note }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="rounded-[1.25rem] border border-[#103678]/10 bg-[#f7fbff] p-4">
+            <p class="text-xs uppercase tracking-[0.18em] text-[#74b4d9]">Quote breakdown</p>
+            <div class="mt-4 space-y-3 text-sm text-[#103678]">
+              <div class="flex items-center justify-between"><span>Monthly subscription</span><strong>{{ billing_summary['monthly_total'] | format_currency }}</strong></div>
+              
+              <div class="flex items-center justify-between"><span>Add-on services</span><strong>{{ billing_summary['addon_total'] | format_currency }}</strong></div>
+              <div class="flex items-center justify-between border-t border-[#103678]/10 pt-3 text-base font-semibold"><span>First payment total</span><strong>{{ billing_summary['first_payment_total'] | format_currency }}</strong></div>
+            </div>
+            {% if billing_summary['enterprise_range'] %}
+              <p class="mt-4 text-xs uppercase tracking-[0.18em] text-[#103678]/60">Enterprise range: {{ billing_summary['enterprise_range'][0] | format_currency }} – {{ billing_summary['enterprise_range'][1] | format_currency }} / month</p>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="premium-button-primary w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white">Continue to checkout</button>
+        </form>
+      </aside>
+    </section>
+  </main>
+</div>
+{% endblock %}
