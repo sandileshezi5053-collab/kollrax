@@ -1,23 +1,18 @@
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
-  Bell,
-  Briefcase,
-  Building2,
   CheckCircle2,
   ChevronRight,
   Cloud,
   Clock3,
   LifeBuoy,
-  LogOut,
   Mail,
   MapPin,
   Menu,
   Phone,
   ShieldCheck,
   Sparkles,
-  User,
   Users,
   X,
 } from "lucide-react";
@@ -122,6 +117,22 @@ const staggerReveal = {
   },
 };
 
+const aboutReveal = {
+  hidden: { opacity: 0, y: 40, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.9,
+      delay: 0.3,
+      ease: [0.16, 1, 0.3, 1] as const,
+      staggerChildren: 0.12,
+      delayChildren: 0.08,
+    },
+  },
+};
+
 const seededState: PlatformState = {
   users: [
     {
@@ -209,13 +220,6 @@ const seededState: PlatformState = {
 };
 
 const PlatformContext = createContext<PlatformContextType | undefined>(undefined);
-
-const isoDate = (value: string) =>
-  new Date(value).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 
 function createId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
@@ -449,6 +453,189 @@ function RouteChangeTracker() {
   return null;
 }
 
+function FlipInfoCard() {
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener?.("change", update);
+    mediaQuery.addListener?.(update);
+    return () => {
+      mediaQuery.removeEventListener?.("change", update);
+      mediaQuery.removeListener?.(update);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.35 }
+    );
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const playState = isVisible && !reduceMotion ? "running" : "paused";
+  const features = [
+    "Microsoft 365 Solutions",
+    "Azure Cloud",
+    "Cybersecurity",
+    "Cloud Migration",
+    "Managed IT Services",
+    "24/7 Enterprise Support",
+  ];
+
+  return (
+    <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center">
+      <style>{`
+        .flip-card-viewport {
+          perspective: 1600px;
+          width: 100%;
+          max-width: 700px;
+          margin: 0 auto;
+          height: 400px;
+        }
+        .flip-card {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform-style: preserve-3d;
+          transition: transform 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+          will-change: transform;
+          animation: autoFlip 18s infinite cubic-bezier(0.34, 1.56, 0.64, 1);
+          animation-play-state: ${playState};
+        }
+        .flip-card-face {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 24px;
+          overflow: hidden;
+          backface-visibility: hidden;
+          transform-style: preserve-3d;
+        }
+        .flip-card-face.front {
+          background: linear-gradient(180deg, rgba(15, 23, 42, 0.14), rgba(15, 23, 42, 0.16)), #020617;
+        }
+        .flip-card-face.back {
+          transform: rotateY(180deg);
+          background: linear-gradient(180deg, #071a3d 0%, #05234f 100%);
+        }
+        .flip-card-image {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: top;
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+          -webkit-font-smoothing: antialiased;
+        }
+        .flip-card-glass {
+          position: absolute;
+          inset: 0;
+          border-radius: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+          pointer-events: none;
+        }
+        .flip-card-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(14, 80, 173, 0.22), rgba(6, 21, 72, 0.42));
+          mix-blend-mode: screen;
+        }
+        .flip-card-front-deco,
+        .flip-card-back-deco {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(36px);
+          opacity: 0.55;
+        }
+        .flip-card-front-deco {
+          width: 220px;
+          height: 220px;
+          background: radial-gradient(circle, rgba(56, 189, 248, 0.26), transparent 56%);
+          top: -40px;
+          right: -40px;
+        }
+        .flip-card-back-deco {
+          width: 200px;
+          height: 200px;
+          background: radial-gradient(circle, rgba(59, 130, 246, 0.22), transparent 56%);
+          bottom: -24px;
+          left: -28px;
+        }
+        .flip-card-particle {
+          position: absolute;
+          border-radius: 9999px;
+          background: rgba(147, 197, 253, 0.52);
+          opacity: 0.75;
+          filter: blur(4px);
+        }
+        .flip-card-feature {
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.04);
+          backdrop-filter: blur(18px);
+        }
+        @keyframes autoFlip {
+          0%, 28% { transform: rotateY(0deg); }
+          38%, 62% { transform: rotateY(180deg); }
+          72%, 100% { transform: rotateY(360deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .flip-card {
+            animation: none !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .flip-card-viewport {
+            max-width: 100%;
+            height: 300px;
+          }
+        }
+      `}</style>
+
+      <div ref={cardRef} className="flip-card-viewport relative">
+        <div className="flip-card">
+          <div className="flip-card-face front">
+            <img
+              src="/images/kollrax-about-cloud.png"
+              alt="KollraX About section with Microsoft 365 cloud architecture"
+              className="flip-card-image"
+              decoding="async"
+              width={700}
+              height={400}
+            />
+            <div className="flip-card-glass" />
+          </div>
+
+          <div className="flip-card-face back">
+            <img
+              src="/images/kollrax-team-meeting.png"
+              alt="KollraX team consulting with business partners"
+              className="flip-card-image"
+              decoding="async"
+              width={700}
+              height={400}
+            />
+            <div className="flip-card-glass" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function TopNav() {
   const [open, setOpen] = useState(false);
 
@@ -544,34 +731,386 @@ function SplashScreen() {
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.45 } }}
-      className="fixed inset-0 z-[80] flex items-center justify-center overflow-hidden bg-[#05136b]"
+      exit={{ opacity: 0, transition: { duration: 3.8, ease: "easeInOut" } }}
+      className="fixed inset-0 z-[80] flex items-center justify-center overflow-hidden"
+      style={{ backgroundColor: "#050816" }}
     >
-      <motion.div
-        className="absolute h-[34rem] w-[34rem] rounded-full bg-[#05136b]/12 blur-3xl"
-        animate={{ scale: [0.94, 1.05, 0.94], opacity: [0.35, 0.55, 0.35] }}
-        transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-      />
-      <div className="relative flex flex-col items-center gap-8 px-6 text-center">
-        <motion.div
-          className="relative flex h-40 w-40 items-center justify-center"
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
-        >
-          <div className="absolute inset-0 rounded-full border border-white/10" />
-          <div className="absolute inset-2 rounded-full border border-[#05136b]/35 border-t-[#05136b] border-r-[#05136b]/60" />
-          <div className="absolute inset-5 rounded-full border border-white/10" />
-          <img src="/images/kollrax-logo-transparent.png" alt="KollraX" className="relative z-10 h-24 w-auto" />
-        </motion.div>
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5 }}
-          className="text-xs font-semibold uppercase tracking-[0.35em] text-white/75"
-        >
-          Microsoft 365 operations
-        </motion.p>
+      <style>{`
+        @keyframes glowPulseIn {
+          0% {
+            opacity: 0;
+            filter: blur(40px);
+            transform: scale(0.2);
+          }
+          8% {
+            opacity: 0.9;
+            filter: blur(25px);
+            transform: scale(0.6);
+          }
+          15% {
+            opacity: 0.7;
+            filter: blur(15px);
+            transform: scale(1);
+          }
+          30% {
+            opacity: 0.5;
+            filter: blur(12px);
+            transform: scale(1.1);
+          }
+          100% {
+            opacity: 0.3;
+            filter: blur(10px);
+            transform: scale(1);
+          }
+        }
+
+        @keyframes metalRingDraw {
+          0% {
+            stroke-dashoffset: 502;
+            opacity: 0;
+            filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+          }
+          8% {
+            opacity: 1;
+          }
+          12% {
+            filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.15));
+          }
+          42% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+            filter: drop-shadow(0 4px 16px rgba(255, 255, 255, 0.2));
+          }
+          57% {
+            stroke-dashoffset: 0;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.15));
+          }
+          100% {
+            stroke-dashoffset: 0;
+            opacity: 0.8;
+            filter: drop-shadow(0 1px 4px rgba(255, 255, 255, 0.08));
+          }
+        }
+
+        @keyframes bluArcDraw {
+          0% {
+            stroke-dashoffset: 157;
+            opacity: 0;
+          }
+          27% {
+            opacity: 0;
+          }
+          35% {
+            opacity: 1;
+            filter: drop-shadow(0 0 4px rgba(29, 139, 239, 0.2));
+          }
+          55% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+            filter: drop-shadow(0 0 8px rgba(29, 139, 239, 0.4));
+          }
+          65% {
+            stroke-dashoffset: 0;
+            opacity: 0.95;
+            filter: drop-shadow(0 0 6px rgba(29, 139, 239, 0.3));
+          }
+          100% {
+            stroke-dashoffset: 0;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 4px rgba(29, 139, 239, 0.2));
+          }
+        }
+
+        @keyframes logoFadeInScale {
+          0% {
+            opacity: 0;
+            transform: scale(0.75);
+          }
+          38% {
+            opacity: 0;
+            transform: scale(0.75);
+          }
+          50% {
+            opacity: 0.7;
+            transform: scale(1.05);
+          }
+          57% {
+            opacity: 1;
+            transform: scale(0.98);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes wordmarkReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+            letter-spacing: -0.05em;
+          }
+          46% {
+            opacity: 0;
+            transform: translateY(20px);
+            letter-spacing: -0.05em;
+          }
+          58% {
+            opacity: 0.8;
+            transform: translateY(0px);
+            letter-spacing: 0.02em;
+          }
+          69% {
+            opacity: 1;
+            transform: translateY(0px);
+            letter-spacing: 0.02em;
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0px);
+            letter-spacing: 0.12em;
+          }
+        }
+
+        @keyframes blueXPulse {
+          0%, 54% {
+            opacity: 0;
+            filter: drop-shadow(0 0 0px rgba(29, 139, 239, 0));
+          }
+          61% {
+            opacity: 0.9;
+            filter: drop-shadow(0 0 12px rgba(29, 139, 239, 0.6));
+          }
+          69% {
+            opacity: 1;
+            filter: drop-shadow(0 0 20px rgba(29, 139, 239, 0.4));
+          }
+          100% {
+            opacity: 1;
+            filter: drop-shadow(0 0 16px rgba(29, 139, 239, 0.3));
+          }
+        }
+
+        @keyframes metallicSweep {
+          0% {
+            opacity: 0;
+            transform: translateX(-200%) skewX(-20deg);
+          }
+          50% {
+            opacity: 0;
+            transform: translateX(-200%) skewX(-20deg);
+          }
+          58% {
+            opacity: 0.7;
+            transform: translateX(-50%) skewX(-20deg);
+          }
+          65% {
+            opacity: 0.3;
+            transform: translateX(100%) skewX(-20deg);
+          }
+          73% {
+            opacity: 0;
+            transform: translateX(200%) skewX(-20deg);
+          }
+          100% {
+            opacity: 0;
+            transform: translateX(200%) skewX(-20deg);
+          }
+        }
+
+        @keyframes softGlowPulse {
+          0%, 100% {
+            box-shadow: 0 0 30px rgba(29, 139, 239, 0.15), 0 0 60px rgba(5, 19, 107, 0.08);
+          }
+          50% {
+            box-shadow: 0 0 60px rgba(29, 139, 239, 0.35), 0 0 100px rgba(5, 19, 107, 0.18);
+          }
+        }
+
+        @keyframes finalGlow {
+          0%, 61% {
+            opacity: 0;
+          }
+          65% {
+            opacity: 0.6;
+          }
+          73% {
+            opacity: 0.3;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+
+        .glow-backdrop {
+          animation: glowPulseIn 5.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .metal-ring {
+          stroke-dasharray: 502;
+          animation: metalRingDraw 5.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .blue-arc {
+          stroke-dasharray: 157;
+          animation: bluArcDraw 5.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .logo-container {
+          animation: logoFadeInScale 5.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .wordmark {
+          animation: wordmarkReveal 5.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .blue-x-accent {
+          animation: blueXPulse 5.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .metallic-sweep {
+          animation: metallicSweep 5.5s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
+        }
+
+        .glow-wrapper {
+          animation: softGlowPulse 5.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .final-glow {
+          animation: finalGlow 5.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+      `}</style>
+
+      {/* Central glow backdrop */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div
+          className="glow-backdrop absolute rounded-full"
+          style={{
+            width: "700px",
+            height: "700px",
+            background: "radial-gradient(circle, rgba(29, 139, 239, 0.35), transparent)",
+            filter: "blur(50px)",
+          }}
+        />
       </div>
+
+      {/* Main content container with proper spacing */}
+      <div className="relative z-10 flex flex-col items-center justify-center gap-12">
+        {/* Logo section */}
+        <div className="flex flex-col items-center gap-0">
+          {/* SVG overlay for ring and arc animations */}
+          <div className="relative flex items-center justify-center h-80 w-80">
+            <svg
+              width="320"
+              height="320"
+              viewBox="0 0 320 320"
+              className="glow-wrapper absolute"
+              style={{
+                maxWidth: "clamp(180px, 25vw, 420px)",
+                height: "auto",
+                aspectRatio: "1 / 1",
+              }}
+            >
+              {/* Metallic ring - outer circle */}
+              <circle
+                cx="160"
+                cy="160"
+                r="80"
+                fill="none"
+                stroke="url(#metalGradient)"
+                strokeWidth="3"
+                className="metal-ring"
+              />
+
+              {/* Blue arc - lower section */}
+              <path
+                d="M 240 160 A 80 80 0 0 1 80 160"
+                fill="none"
+                stroke="#1D8BEF"
+                strokeWidth="2.5"
+                className="blue-arc"
+                strokeLinecap="round"
+              />
+
+              {/* Gradient definitions */}
+              <defs>
+                <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: "#E8E8E8", stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: "#FFFFFF", stopOpacity: 0.85 }} />
+                  <stop offset="100%" style={{ stopColor: "#D0D0D0", stopOpacity: 1 }} />
+                </linearGradient>
+                <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" style={{ stopColor: "rgba(29, 139, 239, 0.4)", stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: "rgba(29, 139, 239, 0)", stopOpacity: 1 }} />
+                </radialGradient>
+              </defs>
+            </svg>
+
+            {/* Logo image */}
+            <div className="logo-container relative z-20 flex items-center justify-center">
+              <img
+                src="/images/kollrax-logo-transparent.png"
+                alt="KollraX"
+                style={{
+                  width: "clamp(180px, 25vw, 420px)",
+                  height: "auto",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  objectFit: "contain",
+                  filter: "drop-shadow(0 0 24px rgba(29, 139, 239, 0.25))",
+                }}
+              />
+
+              {/* Metallic light sweep */}
+              <div
+                className="metallic-sweep absolute inset-0 rounded-full pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Wordmark section - separated from logo */}
+        <motion.div
+          className="wordmark text-center pointer-events-none flex flex-col items-center gap-3"
+        >
+          <h1 className="text-4xl font-semibold tracking-[0.12em] text-white md:text-5xl">
+            KollraX
+          </h1>
+          <p className="text-xs font-medium uppercase tracking-[0.12em] text-white/50">
+            Microsoft 365 Operations
+          </p>
+        </motion.div>
+      </div>
+
+      {/* Ambient animated circles in background */}
+      <motion.div
+        className="absolute h-[32rem] w-[32rem] rounded-full border border-white/5"
+        animate={{ scale: [0.95, 1.1, 0.95], rotate: 360 }}
+        transition={{ repeat: Infinity, duration: 24, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute h-[26rem] w-[26rem] rounded-full border border-sky-300/8 border-t-sky-300/15"
+        animate={{ rotate: -360, scale: [0.96, 1.06, 0.96] }}
+        transition={{ repeat: Infinity, duration: 16, ease: "linear" }}
+      />
+
+      {/* Final subtle glow on completion */}
+      <div
+        className="final-glow absolute rounded-full pointer-events-none"
+        style={{
+          width: "500px",
+          height: "500px",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "radial-gradient(circle, rgba(29, 139, 239, 0.3), transparent)",
+          filter: "blur(60px)",
+        }}
+      />
     </motion.div>
   );
 }
@@ -596,13 +1135,61 @@ function MarketingPage() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="relative z-10 pt-8 lg:pt-0"
           >
+            <style>{`
+              @keyframes typing {
+                0% { width: 0; }
+                100% { width: 100%; }
+              }
+              @keyframes blink {
+                0%, 49% { border-right-color: #05136b; }
+                50%, 100% { border-right-color: transparent; }
+              }
+              @keyframes glow {
+                0%, 100% { box-shadow: 0 0 12px rgba(5, 19, 107, 0.3), 0 0 20px rgba(5, 19, 107, 0.15); }
+                50% { box-shadow: 0 0 20px rgba(5, 19, 107, 0.5), 0 0 30px rgba(5, 19, 107, 0.25); }
+              }
+              @keyframes buttonGlow {
+                0%, 100% { box-shadow: 0 0 20px rgba(10, 26, 67, 0.4), 0 18px 40px rgba(10, 26, 67, 0.18); }
+                50% { box-shadow: 0 0 30px rgba(10, 26, 67, 0.6), 0 18px 50px rgba(10, 26, 67, 0.25); }
+              }
+              @keyframes slideRight {
+                0% { transform: translateX(0px); }
+                50% { transform: translateX(4px); }
+                100% { transform: translateX(0px); }
+              }
+              .typing-text {
+                display: inline-block;
+                overflow: hidden;
+                white-space: nowrap;
+                border-right: 3px solid #05136b;
+                animation: typing 8s steps(40, end) infinite;
+                font-size: 0.75rem;
+                font-weight: 600;
+                letter-spacing: 0.28em;
+                text-transform: uppercase;
+                color: #05136b;
+              }
+              .typing-container {
+                display: inline-flex;
+                align-items: center;
+                padding: 0 16px;
+                min-height: 56px;
+                animation: glow 3s ease-in-out infinite;
+              }
+              .get-started-btn {
+                animation: buttonGlow 2.5s ease-in-out infinite;
+              }
+              .get-started-icon {
+                animation: slideRight 1.5s ease-in-out infinite;
+              }
+            `}</style>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.05 }}
-              className="inline-flex items-center gap-2 rounded-full border border-[#D2D3D6] bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#05136b] shadow-[0_10px_30px_rgba(10,26,67,0.06)] backdrop-blur"
+              className="typing-container rounded-full border border-[#D2D3D6] bg-white/90 px-6 py-4 shadow-[0_10px_30px_rgba(10,26,67,0.06)] backdrop-blur"
             >
-              Microsoft 365 Delivery and Support
+              <span className="typing-text">Microsoft 365 Delivery and Support</span>
             </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -629,12 +1216,18 @@ function MarketingPage() {
               transition={{ duration: 0.55, delay: 0.24 }}
               className="mt-8 flex flex-wrap gap-4"
             >
-              <Link
-                to="/#contact"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#0A1A43] px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(10,26,67,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#05136b]"
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                Get Started <ArrowRight className="h-4 w-4" />
-              </Link>
+                <Link
+                  to="/#contact"
+                  className="get-started-btn inline-flex items-center gap-2 rounded-xl bg-[#0A1A43] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#05136b]"
+                >
+                  Get Started <ArrowRight className="get-started-icon h-4 w-4" />
+                </Link>
+              </motion.div>
               <Link
                 to="/#services"
                 className="inline-flex items-center rounded-xl border border-[#D2D3D6] bg-white px-6 py-3 text-sm font-semibold text-[#0A1A43] shadow-[0_10px_28px_rgba(10,26,67,0.06)] transition duration-300 hover:-translate-y-0.5 hover:border-[#05136b] hover:shadow-[0_16px_36px_rgba(5,19,107,0.12)]"
@@ -729,8 +1322,8 @@ function MarketingPage() {
                 {["AK", "LM", "RS", "TC"].map((initials, index) => (
                   <div
                     key={initials}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-white bg-[#05136b] text-[10px] font-semibold text-white"
-                    style={{ backgroundColor: ["#05136b", "#05136b", "#05136b", "#ff9d3a"][index] }}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 text-[10px] font-semibold text-white"
+                    style={{ backgroundColor: ["#0f172a", "#16a34a", "#38bdf8", "#fbbf24"][index] }}
                   >
                     {initials}
                   </div>
@@ -747,7 +1340,7 @@ function MarketingPage() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.25 }}
-          variants={staggerReveal}
+          variants={aboutReveal}
           className="mx-auto max-w-7xl px-6 lg:px-8"
         >
           <motion.div variants={fadeInUp} className="mb-12 max-w-3xl">
@@ -785,21 +1378,11 @@ function MarketingPage() {
             </div>
 
             <div className="grid gap-6">
-              <motion.div variants={fadeInUp} className="overflow-hidden rounded-[2rem] border border-[#D2D3D6] bg-white shadow-[0_20px_56px_rgba(10,26,67,0.08)]">
-                <motion.img
-                  src="/images/kollrax-operations.jpg"
-                  alt="KollraX development and operations team"
-                  className="h-full w-full object-cover"
-                  whileHover={{ scale: 1.04 }}
-                  transition={{ duration: 0.5 }}
-                />
-              </motion.div>
-              <motion.div variants={fadeInUp} whileHover={{ y: -4 }} className="rounded-[1.75rem] border border-[#D2D3D6] bg-white p-6 shadow-[0_14px_36px_rgba(10,26,67,0.06)]">
-                <p className="text-xs uppercase tracking-[0.22em] text-[#05136b]">Development Team</p>
-                <p className="mt-3 text-sm leading-7 text-[#0A1A43]/72">
-                  Our founders and engineers combine cloud architecture, security operations, and change-management
-                  expertise to execute enterprise rollouts from planning to managed support.
-                </p>
+              <motion.div
+                variants={fadeInUp}
+                className="relative overflow-hidden rounded-[2rem] border border-[#D2D3D6] bg-[#f8fbff] p-5 shadow-[0_30px_80px_rgba(10,26,67,0.12)]"
+              >
+                <FlipInfoCard />
               </motion.div>
             </div>
           </div>
@@ -971,7 +1554,7 @@ function MarketingPage() {
                   <div className="h-px flex-1 bg-white/15" />
                 </div>
                 <p className="text-sm leading-relaxed text-white/90">"{item.quote}"</p>
-                <p className="mt-5 text-xs uppercase tracking-wide text-[#05136b]">{item.author}</p>
+                <p className="mt-5 text-xs uppercase tracking-wide text-white">{item.author}</p>
               </motion.div>
             ))}
           </div>
@@ -997,27 +1580,25 @@ function MarketingPage() {
             </p>
             <Link
               to="/#contact"
-              className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-[#0A1A43] px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(10,26,67,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#05136b]"
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-[#05136b] px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(10,26,67,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#05136b]"
             >
               Talk on WhatsApp <ArrowRight className="h-4 w-4" />
             </Link>
 
             <div className="mt-8 rounded-[1.8rem] border border-[#05136b]/30 bg-white p-4 shadow-[0_14px_30px_rgba(10,26,67,0.04)] sm:p-6">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-[#0A1A43] p-2 text-white">
-                  <Sparkles className="h-full w-full" />
-                </div>
+                <img src="/images/kollrax-logo-transparent.png" alt="KollraX" className="h-10 w-auto" />
                 <div>
                   <p className="text-lg font-semibold">KollraX</p>
                   <p className="text-xs uppercase tracking-[0.25em] text-[#05136b]">Microsoft 365 operations</p>
                 </div>
               </div>
               <div className="mt-5 grid gap-3 md:grid-cols-2">
-                <div className="rounded-[1.5rem] bg-[#0A1A43] p-5 text-white">
+                <div className="rounded-[1.5rem] bg-[#05136b] p-5 text-white">
                   <p className="text-xs uppercase tracking-[0.22em] text-white/55">Email</p>
                   <p className="mt-3 text-lg font-semibold">support@kollrax.com</p>
                 </div>
-                <div className="rounded-[1.5rem] bg-[#0A1A43] p-5 text-white">
+                <div className="rounded-[1.5rem] bg-[#05136b] p-5 text-white">
                   <p className="text-xs uppercase tracking-[0.22em] text-white/55">WhatsApp</p>
                   <p className="mt-3 text-lg font-semibold">+234 708 567 2506</p>
                 </div>
@@ -1031,7 +1612,7 @@ function MarketingPage() {
         </motion.div>
       </section>
 
-      <footer className="relative overflow-hidden border-t border-[#d2d3d6]/20 bg-[#0A1A43]">
+      <footer className="relative overflow-hidden border-t border-[#d2d3d6]/20 bg-[#05136b]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(20,102,205,0.22),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(29,139,239,0.18),transparent_42%)]" />
         <div className="relative mx-auto max-w-6xl px-6 py-14 lg:px-8">
           <motion.div
@@ -1058,13 +1639,13 @@ function MarketingPage() {
               <p className="font-medium text-white">Contact</p>
               <div className="mt-4 space-y-3">
                 <p className="flex items-start gap-2">
-                  <Mail className="mt-0.5 h-4 w-4" /> enterprise@kollrax.com
+                  <Mail className="mt-0.5 h-4 w-4" /> support@kollrax.com
                 </p>
                 <p className="flex items-start gap-2">
-                  <Phone className="mt-0.5 h-4 w-4" /> +1 (415) 555-0148
+                  <Phone className="mt-0.5 h-4 w-4" /> +2347085672506
                 </p>
                 <p className="flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4" /> 100 Pine Street, San Francisco, CA
+                  <MapPin className="mt-0.5 h-4 w-4" /> Orile, Lagos State, Nigeria
                 </p>
               </div>
             </div>
@@ -1124,7 +1705,7 @@ export default function App() {
   const [booting, setBooting] = useState(true);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setBooting(false), 1400);
+    const timer = window.setTimeout(() => setBooting(false), 1800);
     return () => window.clearTimeout(timer);
   }, []);
 
