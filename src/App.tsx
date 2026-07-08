@@ -493,14 +493,15 @@ function FlipInfoCard() {
   ];
 
   return (
-    <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center">
+    <div className="relative mx-auto flex w-full max-w-2xl flex-col items-center justify-center">
       <style>{`
         .flip-card-viewport {
           perspective: 1600px;
           width: 100%;
           max-width: 700px;
           margin: 0 auto;
-          height: 400px;
+          aspect-ratio: 7 / 4;
+          height: auto;
         }
         .flip-card {
           position: relative;
@@ -600,7 +601,7 @@ function FlipInfoCard() {
         @media (max-width: 768px) {
           .flip-card-viewport {
             max-width: 100%;
-            height: 300px;
+            height: 280px;
           }
         }
       `}</style>
@@ -631,6 +632,16 @@ function FlipInfoCard() {
             <div className="flip-card-glass" />
           </div>
         </div>
+      </div>
+      <div className="mt-6 grid w-full gap-3 text-sm text-white/85 sm:grid-cols-2">
+        {features.map((feature) => (
+          <div
+            key={feature}
+            className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-center backdrop-blur-sm"
+          >
+            {feature}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -699,17 +710,17 @@ function MotionBackdrop() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <motion.div
-        className="absolute -left-28 top-24 h-80 w-80 rounded-full bg-[#05136b]/10 blur-3xl"
+        className="hidden sm:block absolute -left-28 top-24 h-80 w-80 rounded-full bg-[#05136b]/10 blur-3xl"
         animate={{ x: [0, 24, 0], y: [0, -18, 0] }}
         transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute right-[-7rem] top-36 h-96 w-96 rounded-full bg-[#05136b]/10 blur-3xl"
+        className="hidden md:block absolute right-[-7rem] top-36 h-96 w-96 rounded-full bg-[#05136b]/10 blur-3xl"
         animate={{ x: [0, -22, 0], y: [0, 16, 0] }}
         transition={{ repeat: Infinity, duration: 20, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-[-8rem] left-1/3 h-96 w-96 rounded-full bg-[#0A1A43]/5 blur-3xl"
+        className="hidden md:block absolute bottom-[-8rem] left-1/3 h-96 w-96 rounded-full bg-[#0A1A43]/5 blur-3xl"
         animate={{ x: [0, 18, 0], y: [0, -12, 0] }}
         transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }}
       />
@@ -987,8 +998,8 @@ function SplashScreen() {
         <div
           className="glow-backdrop absolute rounded-full"
           style={{
-            width: "700px",
-            height: "700px",
+            width: "clamp(220px, 70vw, 700px)",
+            height: "clamp(220px, 70vw, 700px)",
             background: "radial-gradient(circle, rgba(29, 139, 239, 0.35), transparent)",
             filter: "blur(50px)",
           }}
@@ -1000,7 +1011,10 @@ function SplashScreen() {
         {/* Logo section */}
         <div className="flex flex-col items-center gap-0">
           {/* SVG overlay for ring and arc animations */}
-          <div className="relative flex items-center justify-center h-80 w-80">
+          <div
+            className="relative flex items-center justify-center"
+            style={{ width: "clamp(220px, 35vw, 320px)", height: "clamp(220px, 35vw, 320px)" }}
+          >
             <svg
               width="320"
               height="320"
@@ -1088,12 +1102,12 @@ function SplashScreen() {
 
       {/* Ambient animated circles in background */}
       <motion.div
-        className="absolute h-[32rem] w-[32rem] rounded-full border border-white/5"
+        className="hidden sm:block absolute h-[22rem] w-[22rem] rounded-full border border-white/5 md:h-[32rem] md:w-[32rem]"
         animate={{ scale: [0.95, 1.1, 0.95], rotate: 360 }}
         transition={{ repeat: Infinity, duration: 24, ease: "linear" }}
       />
       <motion.div
-        className="absolute h-[26rem] w-[26rem] rounded-full border border-sky-300/8 border-t-sky-300/15"
+        className="hidden md:block absolute h-[18rem] w-[18rem] rounded-full border border-sky-300/8 border-t-sky-300/15 lg:h-[26rem] lg:w-[26rem]"
         animate={{ rotate: -360, scale: [0.96, 1.06, 0.96] }}
         transition={{ repeat: Infinity, duration: 16, ease: "linear" }}
       />
@@ -1102,8 +1116,8 @@ function SplashScreen() {
       <div
         className="final-glow absolute rounded-full pointer-events-none"
         style={{
-          width: "500px",
-          height: "500px",
+          width: "clamp(220px, 55vw, 500px)",
+          height: "clamp(220px, 55vw, 500px)",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
@@ -1195,7 +1209,7 @@ function MarketingPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.96] tracking-tight text-[#0A1A43] sm:text-6xl lg:text-[5rem]"
+              className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.03] tracking-tight text-[#0A1A43] sm:text-5xl lg:text-[5rem]"
             >
               We manage your Microsoft 365.
               <br />
@@ -1275,7 +1289,7 @@ function MarketingPage() {
                 <motion.img
                   src="/images/microsoft-365-dashboard.jpg"
                   alt="Microsoft 365 admin center dashboard"
-                  className="mt-4 h-[420px] w-full rounded-[1.2rem] object-cover shadow-[0_20px_50px_rgba(10,26,67,0.12)]"
+                  className="mt-4 h-auto w-full max-h-[420px] rounded-[1.2rem] object-cover shadow-[0_20px_50px_rgba(10,26,67,0.12)]"
                   initial={{ scale: 1.03 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 1.1 }}
