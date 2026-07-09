@@ -497,14 +497,19 @@ function FlipInfoCard() {
       <style>{`
         .flip-card-viewport {
           perspective: 1600px;
+          position: relative;
           width: 100%;
           max-width: 700px;
           margin: 0 auto;
           aspect-ratio: 7 / 4;
           height: auto;
+          min-height: 0;
+          height: 0;
+          padding-bottom: calc(100% * 4 / 7);
         }
         .flip-card {
-          position: relative;
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
           transform-style: preserve-3d;
@@ -601,7 +606,8 @@ function FlipInfoCard() {
         @media (max-width: 768px) {
           .flip-card-viewport {
             max-width: 100%;
-            height: 280px;
+            height: auto;
+            aspect-ratio: 7 / 4;
           }
         }
       `}</style>
@@ -633,16 +639,6 @@ function FlipInfoCard() {
           </div>
         </div>
       </div>
-      <div className="mt-6 grid w-full gap-3 text-sm text-white/85 sm:grid-cols-2">
-        {features.map((feature) => (
-          <div
-            key={feature}
-            className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-center backdrop-blur-sm"
-          >
-            {feature}
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
@@ -654,7 +650,7 @@ function TopNav() {
     <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#05136b]/95 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-3">
-          <img src="/images/kollrax-logo-transparent.png" alt="KollraX" className="h-9 w-auto md:h-10" />
+          <img src="/images/kollrax-logo-transparent.png" alt="KollraX" className="h-9 min-h-[2.25rem] w-auto max-w-[120px] md:h-10 md:min-h-[2.5rem] md:max-w-[140px]" />
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -710,17 +706,17 @@ function MotionBackdrop() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <motion.div
-        className="hidden sm:block absolute -left-28 top-24 h-80 w-80 rounded-full bg-[#05136b]/10 blur-3xl"
+        className="hidden lg:block absolute -left-28 top-24 h-80 w-80 rounded-full bg-[#05136b]/10 blur-3xl"
         animate={{ x: [0, 24, 0], y: [0, -18, 0] }}
         transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }}
       />
       <motion.div
-        className="hidden md:block absolute right-[-7rem] top-36 h-96 w-96 rounded-full bg-[#05136b]/10 blur-3xl"
+        className="hidden lg:block absolute right-[-7rem] top-36 h-96 w-96 rounded-full bg-[#05136b]/10 blur-3xl"
         animate={{ x: [0, -22, 0], y: [0, 16, 0] }}
         transition={{ repeat: Infinity, duration: 20, ease: "easeInOut" }}
       />
       <motion.div
-        className="hidden md:block absolute bottom-[-8rem] left-1/3 h-96 w-96 rounded-full bg-[#0A1A43]/5 blur-3xl"
+        className="hidden lg:block absolute bottom-[-8rem] left-1/3 h-96 w-96 rounded-full bg-[#0A1A43]/5 blur-3xl"
         animate={{ x: [0, 18, 0], y: [0, -12, 0] }}
         transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }}
       />
@@ -1130,8 +1126,134 @@ function SplashScreen() {
 }
 
 function MarketingPage() {
-  const { state } = usePlatform();
-  const services = state.services.filter((service) => service.enabled);
+  const servicePlans = [
+    {
+      id: "starter",
+      title: "Starter Plan",
+      note: "Minimum 3 users",
+      features: [
+        "Microsoft 365 admin support",
+        "Email & login issue resolution",
+        "User account setup & management",
+        "Password reset & recovery",
+        "Basic Teams support",
+        "MFA setup, basic security policies, spam/phishing protection",
+      ],
+      support: "Email + WhatsApp",
+      response: "24–48 hour response",
+    },
+    {
+      id: "business",
+      title: "Business Plan",
+      note: "Recommended 10+ users",
+      features: [
+        "Full tenant management",
+        "Teams, SharePoint, OneDrive configuration",
+        "User onboarding and offboarding",
+        "MFA enforcement and Conditional Access policies",
+        "Secure Score optimization",
+        "Admin audit and hardening",
+        "Monthly performance reports",
+        "License optimization",
+      ],
+      support: "Priority support",
+      response: "4–12 hour response",
+    },
+    {
+      id: "enterprise",
+      title: "Enterprise Plan",
+      note: "Mission-critical support",
+      features: [
+        "Dedicated account manager",
+        "IT strategy sessions",
+        "Compliance configuration",
+        "Data Loss Prevention (DLP)",
+        "Threat protection monitoring",
+        "24/7 escalation",
+        "1–2 hour SLA",
+      ],
+      support: "24/7 escalation",
+      response: "1–2 hour SLA",
+    },
+  ];
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const updateMobile = () => setIsMobile(mobileQuery.matches);
+    updateMobile();
+    mobileQuery.addEventListener?.("change", updateMobile);
+    return () => mobileQuery.removeEventListener?.("change", updateMobile);
+  }, []);
+
+  const testimonials = [
+    {
+      quote:
+        "Bondverse Group can now manage hybrid staff with one secure Microsoft 365 setup. The support team is responsive and knows our environment inside out.",
+      author: "Bondverse Group",
+    },
+    {
+      quote:
+        "KollraX helped us retire legacy email systems and launch Teams across 300 seats in one quarter, the migration was transparent, efficient, and delivered without downtime.",
+      author: "CTO, Meridian Logistics",
+    },
+    {
+      quote:
+        "Veeboss Stitches improved cross-country collaboration overnight. KollraX locked down access policies while making document sharing much easier for designers.",
+      author: "Veeboss Stitches",
+    },
+    {
+      quote:
+        "Their proactive support model feels like a true partner. We now resolve security alerts faster, and our team has more confidence in Microsoft 365.",
+      author: "Operations Director, Arvon Capital",
+    },
+    {
+      quote:
+        "Steps with Choice scaled quickly without admin chaos. KollraX simplified our tenant governance and gave us a repeatable process for onboarding new teams.",
+      author: "IT Manager, Steps with Choice",
+    },
+    {
+      quote:
+        "Dera Cakes moved to modern collaboration with zero downtime. The team is happier, and our order workflows are faster thanks to clearer Microsoft 365 controls.",
+      author: "Founder, Dera Cakes",
+    },
+  ];
+
+  const carouselTestimonials = [...testimonials, ...testimonials];
+  const testimonialDuration = isMobile ? 34 : 24;
+  const testimonialCardDelay = isMobile ? 0.7 : 0.45;
+
+  const mobileTestimonialAnimation = useMemo(() => {
+    const count = testimonials.length;
+    const step = 100 / count;
+    const values: string[] = [];
+    const times: number[] = [];
+    const total = count * 2;
+
+    for (let i = 0; i <= count; i += 1) {
+      const pos = `-${(step * i).toFixed(4)}%`;
+      values.push(pos);
+      times.push((i * 2) / total);
+      if (i < count) {
+        values.push(pos);
+        times.push((i * 2 + 1) / total);
+      }
+    }
+
+    return { values, times };
+  }, [testimonials.length]);
+
+  const testimonialAnimate = isMobile
+    ? { x: mobileTestimonialAnimation.values }
+    : { x: ["0%", "-100%"] };
+
+  const testimonialTransition = {
+    duration: testimonialDuration,
+    ease: "linear",
+    times: isMobile ? mobileTestimonialAnimation.times : [0, 1],
+    repeat: Infinity,
+  };
 
   return (
     <div className="bg-white text-[#0A1A43]">
@@ -1227,27 +1349,30 @@ function MarketingPage() {
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.24 }}
-              className="mt-8 flex flex-wrap gap-4"
+              transition={{ duration: 0.35, delay: 0.10 }}
+              className="mt-8 grid w-full gap-3 sm:auto-cols-auto sm:grid-flow-row-dense sm:grid-cols-[minmax(0,auto)_minmax(0,auto)]"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="w-full sm:w-auto"
               >
                 <Link
                   to="/#contact"
-                  className="get-started-btn inline-flex items-center gap-2 rounded-xl bg-[#0A1A43] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#05136b]"
+                  className="get-started-btn inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#0A1A43] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#05136b] sm:w-auto"
                 >
                   Get Started <ArrowRight className="get-started-icon h-4 w-4" />
                 </Link>
               </motion.div>
-              <Link
-                to="/#services"
-                className="inline-flex items-center rounded-xl border border-[#D2D3D6] bg-white px-6 py-3 text-sm font-semibold text-[#0A1A43] shadow-[0_10px_28px_rgba(10,26,67,0.06)] transition duration-300 hover:-translate-y-0.5 hover:border-[#05136b] hover:shadow-[0_16px_36px_rgba(5,19,107,0.12)]"
-              >
-                View Services
-              </Link>
+              <motion.div className="w-full sm:w-auto">
+                <Link
+                  to="/#services"
+                  className="inline-flex w-full items-center justify-center rounded-xl border border-[#D2D3D6] bg-white px-6 py-3 text-sm font-semibold text-[#0A1A43] shadow-[0_10px_28px_rgba(10,26,67,0.06)] transition duration-300 hover:-translate-y-0.5 hover:border-[#05136b] hover:shadow-[0_16px_36px_rgba(5,19,107,0.12)] sm:w-auto"
+                >
+                  View Services
+                </Link>
+              </motion.div>
             </motion.div>
             <motion.div
               initial="hidden"
@@ -1428,33 +1553,30 @@ function MarketingPage() {
           <motion.p variants={fadeInUp} className="mt-4 max-w-2xl text-lg leading-8 text-[#0A1A43]/72">
             Clear monthly plans for small, growing, and enterprise teams, with add-ons ready for upsell.
           </motion.p>
-          <div className="mt-12 grid gap-6 xl:grid-cols-2">
-            {services.map((service) => (
+          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {servicePlans.map((plan, index) => (
               <motion.div
-                key={service.id}
+                key={plan.id}
                 variants={fadeInUp}
-                whileHover={{ y: -8 }}
-                className="group relative overflow-hidden rounded-[2rem] border border-[#D2D3D6] bg-white p-7 shadow-[0_18px_44px_rgba(10,26,67,0.08)] transition-all"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.4 }}
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, ease: "easeInOut", repeat: Infinity, repeatType: "mirror", delay: index * 0.12 }}
+                whileHover={{ y: -16, scale: 1.02 }}
+                className="group relative overflow-hidden rounded-[2rem] border border-[#D2D3D6] bg-white p-7 shadow-[0_22px_56px_rgba(10,26,67,0.1)] transition-all"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-[#05136b]">Minimum 3 users</p>
-                    <h3 className="mt-3 text-2xl font-semibold">{service.title}</h3>
-                    <p className="mt-4 max-w-xl text-base leading-7 text-[#0A1A43]/72">{service.description}</p>
+                    <h3 className="text-2xl font-semibold">{plan.title}</h3>
+                    <p className="mt-4 max-w-xl text-base leading-7 text-[#0A1A43]/72">{plan.note}</p>
                   </div>
                   <span className="rounded-full border border-[#D2D3D6] bg-[#F7FAFF] px-3 py-1 text-xs font-medium text-[#0A1A43]/65">
-                    24-48 hrs
+                    {plan.response}
                   </span>
                 </div>
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {[
-                    "Microsoft 365 admin support",
-                    "Email and login issue resolution",
-                    "User account setup and management",
-                    "Password reset support",
-                    "Basic Teams support",
-                    "MFA setup and security policies",
-                  ].map((item) => (
+                <div className="mt-6 space-y-3">
+                  {plan.features.map((item) => (
                     <p key={item} className="flex items-center gap-2 text-sm text-[#0A1A43]/75">
                       <CheckCircle2 className="h-4 w-4 text-[#05136b]" />
                       {item}
@@ -1466,12 +1588,41 @@ function MarketingPage() {
                     to="/#contact"
                     className="inline-flex items-center gap-2 text-sm font-semibold text-[#05136b] transition group-hover:gap-3 group-hover:text-[#05136b]"
                   >
-                    Discuss service <ChevronRight className="h-4 w-4" />
+                    Talk to sales <ChevronRight className="h-4 w-4" />
                   </Link>
-                  <span className="text-xs uppercase tracking-[0.22em] text-[#0A1A43]/45">Support ready</span>
+                  <span className="text-xs uppercase tracking-[0.22em] text-[#0A1A43]/45">{plan.support}</span>
                 </div>
               </motion.div>
             ))}
+          </div>
+
+          <div className="mt-10 rounded-[2rem] border border-[#D2D3D6] bg-[#F8FBFF] p-6 shadow-[0_18px_44px_rgba(10,26,67,0.08)]">
+            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-[#05136b]">Add-On Services</p>
+                <h3 className="mt-3 text-2xl font-semibold">Separate billing options</h3>
+                <p className="mt-3 text-base leading-7 text-[#0A1A43]/72">
+                  One-time add-on services are priced separately and charged upfront.
+                </p>
+              </div>
+              <div className="rounded-[1.5rem] border border-[#D2D3D6] bg-white p-4 text-sm text-[#0A1A43]/80">
+                <p className="font-semibold text-[#0A1A43]">Microsoft 365 Migration</p>
+                <p className="mt-1">₦150K – ₦500K</p>
+                <p className="mt-4 font-semibold text-[#0A1A43]">Security Hardening</p>
+                <p className="mt-1">From ₦100K</p>
+                <p className="mt-4 font-semibold text-[#0A1A43]">Tenant Cleanup</p>
+                <p className="mt-1">From ₦80K</p>
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-[1.5rem] bg-white p-5 text-sm leading-6 text-[#0A1A43]/72">
+              <p className="font-semibold text-[#05136b]">Terms & Billing Rules</p>
+              <p className="mt-3">
+                Starter plan requires a minimum of 3 users. Business plan has no minimum requirement but is recommended for teams of 10 or more.
+              </p>
+              <p className="mt-3">Microsoft 365 licenses are NOT included in KollraX pricing.</p>
+              <p className="mt-3">Add-on services are paid upfront and are not part of the recurring subscription fee.</p>
+            </div>
           </div>
         </motion.div>
       </section>
@@ -1534,43 +1685,53 @@ function MarketingPage() {
           <p className="mt-4 max-w-2xl text-white/78">
             Long-term partnerships built on consistent response quality, secure execution, and measurable business outcomes.
           </p>
-          <div className="mt-14 grid gap-10 lg:grid-cols-3">
-            {[
-              {
-                quote:
-                  "KollraX made our Microsoft 365 migration predictable and secure. We moved 300+ users with no major downtime.",
-                author: "CTO, Meridian Logistics",
-              },
-              {
-                quote:
-                  "Their support model feels like an extension of our internal IT organization. Response quality is consistently high.",
-                author: "Operations Director, Arvon Capital",
-              },
-              {
-                quote:
-                  "From Teams governance to compliance controls, KollraX gave us a platform we can trust under pressure.",
-                author: "Head of Technology, Norfield Energy",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.author}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08, duration: 0.5 }}
-                whileHover={{ y: -4, borderColor: "rgba(29,139,239,0.6)" }}
-                className="rounded-[1.75rem] border border-white/12 bg-white/7 p-8 backdrop-blur-sm transition-all"
-              >
-                <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#05136b]/20 text-sm font-semibold text-white">
-                    {item.author.slice(0, 1)}
-                  </div>
-                  <div className="h-px flex-1 bg-white/15" />
-                </div>
-                <p className="text-sm leading-relaxed text-white/90">"{item.quote}"</p>
-                <p className="mt-5 text-xs uppercase tracking-wide text-white">{item.author}</p>
-              </motion.div>
-            ))}
+          <div className="mt-14 overflow-hidden">
+            <motion.div
+              className="flex gap-6"
+              animate={testimonialAnimate}
+              transition={testimonialTransition}
+            >
+              {carouselTestimonials.map((item, index) => (
+                  <motion.div
+                    key={`${item.author}-${index}`}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.35 }}
+                    transition={{ delay: index * testimonialCardDelay, duration: 0.75 }}
+                    whileHover={{ y: -6 }}
+                    className="flex-shrink-0 min-w-[86vw] sm:min-w-[320px] max-w-[380px] rounded-[2rem] border border-white/15 bg-white/10 p-7 shadow-[0_40px_90px_rgba(0,0,0,0.16)] backdrop-blur-xl"
+                  >
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div className="rounded-2xl bg-white/15 px-3 py-1 text-[0.65rem] uppercase tracking-[0.28em] text-white/80">
+                        customer story
+                      </div>
+                      <div className="flex items-center gap-1 text-sm font-semibold text-amber-300">
+                        <Sparkles className="h-4 w-4" />
+                        5.0
+                      </div>
+                    </div>
+                    <p className="text-base leading-8 text-white/90 sm:text-lg">
+                      “{item.quote}”
+                    </p>
+                    <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-white/90">
+                      {item.author}
+                    </p>
+                    <div className="mt-6 h-2.5 overflow-hidden rounded-full bg-white/10">
+                      <motion.div
+                        className="h-full rounded-full bg-gradient-to-r from-amber-300 via-white to-white/40 shadow-[0_0_0_16px_rgba(255,255,255,0.18)]"
+                        style={{ transformOrigin: "left center" }}
+                        animate={{ scaleX: [0.18, 0.55, 1, 0.55, 0.18] }}
+                        transition={{
+                          duration: testimonialDuration,
+                          ease: "linear",
+                          repeat: Infinity,
+                          delay: (index % testimonials.length) * (testimonialDuration / testimonials.length),
+                        }}
+                      />
+                    </div>
+                  </motion.div>
+              ))}
+            </motion.div>
           </div>
         </motion.div>
       </section>
@@ -1601,7 +1762,7 @@ function MarketingPage() {
 
             <div className="mt-8 rounded-[1.8rem] border border-[#05136b]/30 bg-white p-4 shadow-[0_14px_30px_rgba(10,26,67,0.04)] sm:p-6">
               <div className="flex items-center gap-3">
-                <img src="/images/kollrax-logo-transparent.png" alt="KollraX" className="h-10 w-auto" />
+                <img src="/images/kollrax-logo-transparent.png" alt="KollraX" className="h-10 min-h-[2.5rem] w-auto max-h-[3rem] max-w-[140px] sm:max-w-[160px]" />
                 <div>
                   <p className="text-lg font-semibold">KollraX</p>
                   <p className="text-xs uppercase tracking-[0.25em] text-[#05136b]">Microsoft 365 operations</p>
