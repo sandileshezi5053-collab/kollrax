@@ -1,9 +1,8 @@
-import { ReactNode, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, createContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   CheckCircle2,
-  ChevronRight,
   Cloud,
   Clock3,
   LifeBuoy,
@@ -420,12 +419,6 @@ function PlatformProvider({ children }: { children: ReactNode }) {
   );
 }
 
-function usePlatform() {
-  const context = useContext(PlatformContext);
-  if (!context) throw new Error("usePlatform must be used inside PlatformProvider");
-  return context;
-}
-
 function AppShell() {
   return (
     <BrowserRouter>
@@ -483,14 +476,6 @@ function FlipInfoCard() {
   }, []);
 
   const playState = isVisible && !reduceMotion ? "running" : "paused";
-  const features = [
-    "Microsoft 365 Solutions",
-    "Azure Cloud",
-    "Cybersecurity",
-    "Cloud Migration",
-    "Managed IT Services",
-    "24/7 Enterprise Support",
-  ];
 
   return (
     <div className="relative mx-auto flex w-full max-w-2xl flex-col items-center justify-center">
@@ -1130,50 +1115,72 @@ function MarketingPage() {
     {
       id: "starter",
       title: "Starter Plan",
-      note: "Minimum 3 users",
+      price: "$89",
+      frequency: "/month",
+      users: "Up to 10 users",
+      supportIcon: LifeBuoy,
+      supportClasses: "border-[#dbeafe] bg-[#dbeafe] text-[#1d4ed8]",
+      response: "Response time: 24–48 hours",
+      button: "Get Started",
+      icon: Users,
+      accentClasses: "bg-[#dbeafe] text-[#1d4ed8]",
       features: [
         "Microsoft 365 admin support",
-        "Email & login issue resolution",
-        "User account setup & management",
-        "Password reset & recovery",
-        "Basic Teams support",
-        "MFA setup, basic security policies, spam/phishing protection",
+        "Email and login issue resolution",
+        "User account setup and management",
+        "Password reset and recovery",
+        "Basic Microsoft Teams support",
+        "Basic MFA setup and security checks",
+        "Spam and phishing protection assistance",
       ],
-      support: "Email + WhatsApp",
-      response: "24–48 hour response",
     },
     {
       id: "business",
       title: "Business Plan",
-      note: "Recommended 10+ users",
+      price: "$199",
+      frequency: "/month",
+      users: "Up to 25 users",
+      supportIcon: ShieldCheck,
+      supportClasses: "border-[#dbeafe] bg-[#dbeafe] text-[#1d4ed8]",
+      response: "Response time: 4–12 hours",
+      button: "Get Started",
+      icon: Cloud,
+      accentClasses: "bg-[#dbeafe] text-[#1d4ed8]",
       features: [
-        "Full tenant management",
-        "Teams, SharePoint, OneDrive configuration",
+        "Full Microsoft 365 tenant management",
         "User onboarding and offboarding",
-        "MFA enforcement and Conditional Access policies",
+        "MFA enforcement",
+        "Conditional Access configuration",
         "Secure Score optimization",
-        "Admin audit and hardening",
-        "Monthly performance reports",
+        "Teams, SharePoint, and OneDrive management",
         "License optimization",
+        "Monthly Microsoft 365 performance reports",
       ],
-      support: "Priority support",
-      response: "4–12 hour response",
+      mostPopular: true,
     },
     {
       id: "enterprise",
       title: "Enterprise Plan",
-      note: "Mission-critical support",
+      price: "$499",
+      frequency: "/month",
+      users: "25+ users",
+      supportIcon: Sparkles,
+      supportClasses: "border-[#7c3aed] bg-[#f3e8ff] text-[#7c3aed]",
+      response: "Response time: 1–2 hours",
+      responseClasses: "border-[#ede9fe] bg-[#ede9fe] text-[#7c3aed]",
+      button: "Get Started",
+      icon: ShieldCheck,
+      accentClasses: "bg-[#ede9fe] text-[#7c3aed]",
       features: [
         "Dedicated account manager",
-        "IT strategy sessions",
-        "Compliance configuration",
+        "Advanced Microsoft 365 administration",
+        "Compliance configuration support",
         "Data Loss Prevention (DLP)",
         "Threat protection monitoring",
-        "24/7 escalation",
-        "1–2 hour SLA",
+        "Security posture reviews",
+        "Priority escalation support",
+        "Custom SLA agreements",
       ],
-      support: "24/7 escalation",
-      response: "1–2 hour SLA",
     },
   ];
 
@@ -1250,7 +1257,7 @@ function MarketingPage() {
 
   const testimonialTransition = {
     duration: testimonialDuration,
-    ease: "linear",
+    ease: [0.25, 0.25, 0.75, 0.75] as const,
     times: isMobile ? mobileTestimonialAnimation.times : [0, 1],
     repeat: Infinity,
   };
@@ -1551,79 +1558,95 @@ function MarketingPage() {
             Microsoft 365 service plans built to convert
           </motion.h2>
           <motion.p variants={fadeInUp} className="mt-4 max-w-2xl text-lg leading-8 text-[#0A1A43]/72">
-            Clear monthly plans for small, growing, and enterprise teams, with add-ons ready for upsell.
+            Clear monthly plans for small, growing, and enterprise teams.
           </motion.p>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {servicePlans.map((plan, index) => (
-              <motion.div
-                key={plan.id}
-                variants={fadeInUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.4 }}
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, ease: "easeInOut", repeat: Infinity, repeatType: "mirror", delay: index * 0.12 }}
-                whileHover={{ y: -16, scale: 1.02 }}
-                className="group relative overflow-hidden rounded-[2rem] border border-[#D2D3D6] bg-white p-7 shadow-[0_22px_56px_rgba(10,26,67,0.1)] transition-all"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-2xl font-semibold">{plan.title}</h3>
-                    <p className="mt-4 max-w-xl text-base leading-7 text-[#0A1A43]/72">{plan.note}</p>
+          <div className="mt-12 grid items-start gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {servicePlans.map((plan, index) => {
+              const Icon = plan.icon;
+              return (
+                <motion.div
+                  key={plan.id}
+                  variants={fadeInUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.4 }}
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, ease: "easeInOut", repeat: Infinity, repeatType: "mirror", delay: index * 0.12 }}
+                  whileHover={{ y: -16, scale: 1.02 }}
+                  className={`group relative overflow-visible rounded-[2rem] border bg-white p-8 shadow-[0_32px_80px_rgba(10,26,67,0.08)] transition-all ${
+                    plan.mostPopular
+                      ? "border-[#0A1A43] z-30 -mt-10 lg:-mt-14"
+                      : "border-[#D2D3D6] z-10"
+                  }`}
+                >
+                  {plan.mostPopular ? (
+                    <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0A1A43] px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white shadow-[0_16px_40px_rgba(5,19,107,0.18)]">
+                      Most Popular
+                    </div>
+                  ) : null}
+                  <div className="flex items-start gap-4">
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-[1.5rem] ${plan.accentClasses} shadow-[0_18px_45px_rgba(29,78,216,0.12)]`}>
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-2xl font-semibold tracking-tight text-[#0A1A43]">{plan.title}</h3>
+                      {plan.note ? (
+                        <p className="mt-2 text-sm leading-6 text-[#0A1A43]/72">{plan.note}</p>
+                      ) : null}
+                      <div className={`mt-4 inline-flex rounded-full border px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] shadow-[0_2px_6px_rgba(15,23,42,0.08)] whitespace-nowrap ${plan.responseClasses ?? "border-[#D2D3D6] bg-[#F7FAFF] text-[#0A1A43]"}`}>
+                        {plan.response}
+                      </div>
+                    </div>
                   </div>
-                  <span className="rounded-full border border-[#D2D3D6] bg-[#F7FAFF] px-3 py-1 text-xs font-medium text-[#0A1A43]/65">
-                    {plan.response}
-                  </span>
-                </div>
-                <div className="mt-6 space-y-3">
-                  {plan.features.map((item) => (
-                    <p key={item} className="flex items-center gap-2 text-sm text-[#0A1A43]/75">
-                      <CheckCircle2 className="h-4 w-4 text-[#05136b]" />
-                      {item}
-                    </p>
-                  ))}
-                </div>
-                <div className="mt-6 flex items-center justify-between border-t border-[#D2D3D6]/70 pt-4">
-                  <Link
-                    to="/#contact"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#05136b] transition group-hover:gap-3 group-hover:text-[#05136b]"
-                  >
-                    Talk to sales <ChevronRight className="h-4 w-4" />
-                  </Link>
-                  <span className="text-xs uppercase tracking-[0.22em] text-[#0A1A43]/45">{plan.support}</span>
-                </div>
-              </motion.div>
-            ))}
+
+                  <div className="mt-8 rounded-[1.75rem] border border-[#E5E7EB] bg-[#F8FAFF] p-6">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div>
+                        <div className="flex items-end gap-3">
+                          <span className="text-5xl font-semibold tracking-tight text-[#0A1A43]">{plan.price}</span>
+                          <span className="pb-1 text-base font-medium text-[#0A1A43]/65">{plan.frequency}</span>
+                        </div>
+                        <p className="mt-3 text-sm text-[#0A1A43]/72">{plan.users}</p>
+                      </div>
+                      <div className={`rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-[0.28em] ${plan.supportClasses} flex items-center gap-2`}>
+                        {plan.supportIcon ? <plan.supportIcon className="h-3.5 w-3.5" /> : null}
+                        <span>{plan.support}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 rounded-[1.75rem] border border-[#E5E7EB] bg-[#F8FBFF] p-5">
+                    <p className="text-xs uppercase tracking-[0.3em] text-[#05136b]/70">Included</p>
+                    <div className="mt-5 space-y-3">
+                      {plan.features.map((item) => (
+                        <p key={item} className="flex items-start gap-3 text-sm text-[#0A1A43]/76">
+                          <span className="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#0A1A43]/10 text-[#05136b]">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          </span>
+                          <span>{item}</span>
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex flex-col gap-4 border-t border-[#D2D3D6]/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                    <Link
+                      to="/#contact"
+                      className={`inline-flex w-full items-center justify-center rounded-2xl px-6 py-3 text-sm font-semibold text-white transition ${
+                        plan.id === "enterprise"
+                          ? "bg-[#7c3aed] hover:bg-[#5b21b6]"
+                          : "bg-[#0A1A43] hover:bg-[#05136b]"
+                      } sm:w-auto`}
+                    >
+                      {plan.button}
+                    </Link>
+                    <span className="text-xs uppercase tracking-[0.22em] text-[#0A1A43]/45">{plan.support}</span>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
-          <div className="mt-10 rounded-[2rem] border border-[#D2D3D6] bg-[#F8FBFF] p-6 shadow-[0_18px_44px_rgba(10,26,67,0.08)]">
-            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-[#05136b]">Add-On Services</p>
-                <h3 className="mt-3 text-2xl font-semibold">Separate billing options</h3>
-                <p className="mt-3 text-base leading-7 text-[#0A1A43]/72">
-                  One-time add-on services are priced separately and charged upfront.
-                </p>
-              </div>
-              <div className="rounded-[1.5rem] border border-[#D2D3D6] bg-white p-4 text-sm text-[#0A1A43]/80">
-                <p className="font-semibold text-[#0A1A43]">Microsoft 365 Migration</p>
-                <p className="mt-1">₦150K – ₦500K</p>
-                <p className="mt-4 font-semibold text-[#0A1A43]">Security Hardening</p>
-                <p className="mt-1">From ₦100K</p>
-                <p className="mt-4 font-semibold text-[#0A1A43]">Tenant Cleanup</p>
-                <p className="mt-1">From ₦80K</p>
-              </div>
-            </div>
-
-            <div className="mt-6 rounded-[1.5rem] bg-white p-5 text-sm leading-6 text-[#0A1A43]/72">
-              <p className="font-semibold text-[#05136b]">Terms & Billing Rules</p>
-              <p className="mt-3">
-                Starter plan requires a minimum of 3 users. Business plan has no minimum requirement but is recommended for teams of 10 or more.
-              </p>
-              <p className="mt-3">Microsoft 365 licenses are NOT included in KollraX pricing.</p>
-              <p className="mt-3">Add-on services are paid upfront and are not part of the recurring subscription fee.</p>
-            </div>
-          </div>
         </motion.div>
       </section>
 
