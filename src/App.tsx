@@ -1301,24 +1301,30 @@ function MarketingPage() {
                 100% { transform: translateX(0px); }
               }
               .typing-text {
-                display: inline-block;
-                overflow: hidden;
-                white-space: nowrap;
-                border-right: 3px solid #05136b;
-                animation: typing 8s steps(40, end) infinite;
-                font-size: 0.75rem;
-                font-weight: 600;
-                letter-spacing: 0.28em;
-                text-transform: uppercase;
-                color: #05136b;
-              }
-              .typing-container {
-                display: inline-flex;
-                align-items: center;
-                padding: 0 16px;
-                min-height: 56px;
-                animation: glow 3s ease-in-out infinite;
-              }
+                  display: inline-block;
+                  overflow: hidden;
+                  white-space: nowrap;
+                  border-right: 3px solid #05136b;
+                  animation: typing 8s steps(40, end) infinite;
+                  font-size: 0.75rem;
+                  font-weight: 600;
+                  letter-spacing: 0.28em;
+                  text-transform: uppercase;
+                  color: #05136b;
+                }
+                .typing-container {
+                  display: inline-flex;
+                  align-items: center;
+                  padding: 0 16px;
+                  min-height: 56px;
+                  animation: glow 3s ease-in-out infinite;
+                }
+                /* Mobile adjustments */
+                @media (max-width: 420px) {
+                  .typing-text { font-size: 0.65rem; letter-spacing: 0.22em; }
+                  .typing-container { padding: 0 12px; min-height: 48px; }
+                  .get-started-btn { padding-left: 1rem; padding-right: 1rem; }
+                }
               .get-started-btn {
                 animation: buttonGlow 2.5s ease-in-out infinite;
               }
@@ -1334,11 +1340,11 @@ function MarketingPage() {
             >
               <span className="typing-text">Microsoft 365 Delivery and Support</span>
             </motion.p>
-            <motion.h1
+              <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.03] tracking-tight text-[#0A1A43] sm:text-5xl lg:text-[5rem]"
+              className="mt-6 max-w-full sm:max-w-3xl text-3xl font-semibold leading-[1.06] tracking-tight text-[#0A1A43] sm:text-4xl md:text-5xl lg:text-[5rem]"
             >
               We manage your Microsoft 365.
               <br />
