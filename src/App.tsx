@@ -103,6 +103,25 @@ type PlatformContextType = {
 const STORAGE_KEY = "kollrax-platform-state";
 const SESSION_KEY = "kollrax-session";
 
+type ServicePlan = {
+  id: string;
+  title: string;
+  price: string;
+  frequency: string;
+  users: string;
+  support?: string;
+  supportIcon?: any;
+  supportClasses?: string;
+  response: string;
+  responseClasses?: string;
+  button: string;
+  icon: any;
+  accentClasses?: string;
+  features: string[];
+  mostPopular?: boolean;
+  note?: string;
+};
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const } },
@@ -1111,7 +1130,7 @@ function SplashScreen() {
 }
 
 function MarketingPage() {
-  const servicePlans = [
+  const servicePlans: ServicePlan[] = [
     {
       id: "starter",
       title: "Starter Plan",
@@ -1323,6 +1342,8 @@ function MarketingPage() {
                 @media (max-width: 420px) {
                   .typing-text { font-size: 0.65rem; letter-spacing: 0.22em; }
                   .typing-container { padding: 0 12px; min-height: 48px; }
+                  .typing-text { display: block; text-align: center; width: 100%; }
+                  .typing-container { justify-content: center; }
                   .get-started-btn { padding-left: 1rem; padding-right: 1rem; }
                 }
               .get-started-btn {
@@ -1336,7 +1357,7 @@ function MarketingPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.05 }}
-              className="typing-container rounded-full border border-[#D2D3D6] bg-white/90 px-6 py-4 shadow-[0_10px_30px_rgba(10,26,67,0.06)] backdrop-blur"
+              className="typing-container rounded-full border border-[#D2D3D6] bg-white/90 px-6 py-4 shadow-[0_10px_30px_rgba(10,26,67,0.06)] backdrop-blur w-full sm:w-auto mx-auto"
             >
               <span className="typing-text">Microsoft 365 Delivery and Support</span>
             </motion.p>
@@ -1423,11 +1444,10 @@ function MarketingPage() {
               transition={{ duration: 0.35 }}
               className="relative overflow-hidden rounded-[2rem] border border-[#D2D3D6] bg-white p-5 shadow-[0_24px_60px_rgba(10,26,67,0.1)]"
             >
-              <div className="rounded-[1.5rem] border border-[#E8EDF7] bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] p-4">
                 <motion.img
                   src="/images/microsoft-365-dashboard.jpg"
                   alt="Microsoft 365 admin center dashboard"
-                  className="mt-4 h-auto w-full max-h-[420px] rounded-[1.2rem] object-cover shadow-[0_20px_50px_rgba(10,26,67,0.12)]"
+                  className="mt-4 h-auto w-full max-h-[620px] rounded-[0.2rem] object-cover shadow-[0_20px_50px_rgba(10,26,67,0.12)]"
                   initial={{ scale: 1.03 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 1.1 }}
@@ -1447,7 +1467,6 @@ function MarketingPage() {
                     </motion.div>
                   ))}
                 </div>
-              </div>
             </motion.div>
           </motion.div>
         </div>
