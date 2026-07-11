@@ -1605,7 +1605,7 @@ function MarketingPage() {
                   }`}
                 >
                   {plan.mostPopular ? (
-                    <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0A1A43] px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white shadow-[0_16px_40px_rgba(5,19,107,0.18)]">
+                    <div className="absolute left-1/2 top-3 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0A1A43] px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white shadow-[0_16px_40px_rgba(5,19,107,0.18)] ring-2 ring-white">
                       Most Popular
                     </div>
                   ) : null}
