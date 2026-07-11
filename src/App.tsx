@@ -1600,7 +1600,7 @@ function MarketingPage() {
                   whileHover={{ y: -16, scale: 1.02 }}
                   className={`group relative overflow-visible rounded-[2rem] border bg-white p-8 shadow-[0_32px_80px_rgba(10,26,67,0.08)] transition-all ${
                     plan.mostPopular
-                      ? "border-[#0A1A43] z-30 -mt-10 lg:-mt-14"
+                      ? "border-[#0A1A43] z-30 lg:-mt-14"
                       : "border-[#D2D3D6] z-10"
                   }`}
                 >
