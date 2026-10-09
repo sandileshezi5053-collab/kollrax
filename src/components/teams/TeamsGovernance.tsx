@@ -1,0 +1,22 @@
+import { ArrowRight, FileText, FolderTree, KeyRound, Settings2, ShieldCheck, UserCog, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const governanceCards: [string, string, typeof Settings2][] = [
+  ['Team Creation', 'Define who can create teams and how new collaboration spaces are established.', Settings2],
+  ['Naming', 'Establish sensible naming conventions where appropriate.', FileText],
+  ['Ownership', 'Ensure teams have appropriate owners responsible for ongoing management.', UserCog],
+  ['Guest Access', 'Control external collaboration according to business requirements.', Users],
+  ['Lifecycle', 'Review inactive or unnecessary teams and determine appropriate retention or cleanup processes.', FolderTree],
+  ['Permissions', 'Help ensure users have appropriate access to collaboration resources.', KeyRound],
+];
+const securityCards = ['Identity and authentication', 'MFA', 'Conditional Access', 'Guest access', 'External collaboration', 'Meeting policies', 'File sharing', 'SharePoint permissions', 'OneDrive sharing', 'Administrative roles'];
+
+export default function TeamsGovernance() {
+  return (
+    <>
+      <section className="relative overflow-hidden bg-slate-50"><div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-24"><div className="max-w-3xl"><div className="inline-flex items-center gap-2 rounded-full border border-msblue-200 bg-msblue-50 px-3.5 py-1.5"><span className="h-1.5 w-1.5 rounded-full bg-teal-500" /><span className="text-xs font-semibold uppercase tracking-[0.14em] text-msblue-700">Teams governance</span></div><h2 className="mt-5 text-3xl font-bold leading-[1.15] tracking-tight text-navy-900 sm:text-4xl">As Teams grows, <span className="bg-gradient-to-r from-msblue-600 to-teal-500 bg-clip-text text-transparent">governance becomes important.</span></h2><p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">Without basic governance, organizations can quickly accumulate unused teams, duplicate workspaces, unclear ownership, excessive guests, and difficult-to-manage collaboration environments.</p></div><div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{governanceCards.map(([title, description, Icon]) => <div key={title} className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-msblue-200 hover:shadow-card-hover"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-teal-300"><Icon className="h-5 w-5" /></div><h3 className="mt-5 text-base font-semibold text-navy-900">{title}</h3><p className="mt-2 text-sm leading-relaxed text-slate-600">{description}</p></div>)}</div></div></section>
+
+      <section className="relative overflow-hidden bg-navy-950 text-white"><div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-msblue-500/10 blur-3xl" /><div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-24"><div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start"><div><div className="inline-flex items-center gap-2 rounded-full border border-teal-400/20 bg-teal-400/10 px-3.5 py-1.5"><ShieldCheck className="h-4 w-4 text-teal-300" /><span className="text-xs font-semibold uppercase tracking-[0.14em] text-teal-200">Teams security</span></div><h2 className="mt-5 max-w-xl text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">Collaboration should not come at the expense of <span className="text-teal-300">security.</span></h2><p className="mt-5 max-w-xl text-base leading-relaxed text-slate-300">Teams makes it easier for people to collaborate. That also means organizations need appropriate controls around identity, access, sharing, guests, meetings, and files.</p><Link to="/microsoft-365-assessment" className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-semibold text-navy-900 transition-all hover:bg-teal-50">Assess My Microsoft 365 Security<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></Link></div><div className="grid gap-3 sm:grid-cols-2">{securityCards.map((item) => <div key={item} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 transition-colors hover:border-teal-400/30 hover:bg-white/[0.07]"><ShieldCheck className="h-4 w-4 shrink-0 text-teal-300" /><span className="text-sm text-slate-200">{item}</span></div>)}</div></div></div></section>
+    </>
+  );
+}

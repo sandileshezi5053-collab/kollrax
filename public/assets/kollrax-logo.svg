@@ -1,0 +1,23 @@
+<svg width="1200" height="420" viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KollraX logo">
+  <defs>
+    <linearGradient id="silverGrad" x1="100" y1="60" x2="960" y2="330" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F7F9FC"/>
+      <stop offset="0.45" stop-color="#D5DDE7"/>
+      <stop offset="1" stop-color="#B0BCC8"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="260" y1="40" x2="760" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18A0FF"/>
+      <stop offset="0.48" stop-color="#0B7FEF"/>
+      <stop offset="1" stop-color="#0B5FD7"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(20 0)">
+    <path d="M52 278C126 148 254 71 411 68C591 64 747 145 854 261C818 331 744 375 645 393C500 419 327 405 200 353C154 333 101 310 52 278Z" fill="url(#silverGrad)" opacity="0.97"/>
+    <path d="M144 281C220 191 328 140 458 136C597 132 726 181 806 270C779 298 739 324 691 346C612 386 526 407 439 403C334 398 247 367 184 322C170 312 156 297 144 281Z" fill="url(#blueGrad)" opacity="0.96"/>
+    <path d="M65 282C154 354 256 396 381 409C530 425 671 390 791 310C822 284 849 255 869 224C840 333 759 402 639 434C515 468 371 466 241 424C170 399 109 356 65 282Z" fill="url(#silverGrad)" opacity="0.94"/>
+
+    <path d="M272 60V340H358V226L590 340H675L449 223L694 60H604L358 180V60H272Z" fill="url(#blueGrad)"/>
+    <path d="M318 97L641 340H705L378 97H318Z" fill="#F3F7FB"/>
+  </g>
+</svg>

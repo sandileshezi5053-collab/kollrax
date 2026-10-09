@@ -1,0 +1,18 @@
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+
+const faqs = [
+  ['How long does a Microsoft 365 migration take?', 'Migration timelines vary depending on the number of users, data volume, source environment, workloads, dependencies, and migration strategy. We assess the environment first and provide a realistic migration plan.'],
+  ['Can you migrate from Google Workspace to Microsoft 365?', 'Yes. KollraX can help organizations plan and execute migrations from Google Workspace to Microsoft 365, subject to the specific environment and workloads involved.'],
+  ['Can you migrate from on-premises Exchange?', 'Yes. We can support organizations moving from on-premises Exchange to Exchange Online, including planning, preparation, migration, and post-migration support.'],
+  ['Will users experience downtime?', 'Migration strategy depends on the environment. We plan the migration and cutover approach to minimize disruption to users and business operations.'],
+  ['Do we need to have an internal IT team?', 'No. KollraX can provide Microsoft 365 migration and ongoing support for organizations without dedicated Microsoft 365 specialists. We can also work alongside an existing internal IT team.'],
+  ['Do you provide support after migration?', 'Yes. KollraX can provide ongoing Microsoft 365 administration, security, troubleshooting, and support after the migration.'],
+  ['Can you migrate our files to SharePoint or OneDrive?', 'Yes. Depending on the current storage environment, we can help plan and execute migration of business files into SharePoint and OneDrive.'],
+  ['Will you secure Microsoft 365 after migration?', 'Security is part of our migration approach. We can review and configure areas such as identity, MFA, Conditional Access, administrator roles, sharing, and other Microsoft 365 security controls.'],
+];
+
+export default function MigrationFAQ() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  return <section className="relative overflow-hidden bg-slate-50"><div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(#1e3a6f 1px, transparent 1px), linear-gradient(90deg, #1e3a6f 1px, transparent 1px)', backgroundSize: '56px 56px' }} /><div className="relative mx-auto max-w-3xl px-5 py-16 sm:px-8 lg:px-12 lg:py-24"><div className="text-center"><div className="inline-flex items-center gap-2 rounded-full border border-msblue-200 bg-msblue-50 px-3.5 py-1.5"><span className="h-1.5 w-1.5 rounded-full bg-teal-500" /><span className="text-xs font-semibold uppercase tracking-[0.14em] text-msblue-700">FAQ</span></div><h2 className="mt-5 text-3xl font-bold leading-[1.15] tracking-tight text-navy-900 sm:text-4xl">Microsoft 365 migration <span className="bg-gradient-to-r from-msblue-600 to-teal-500 bg-clip-text text-transparent">questions.</span></h2></div><div className="mt-12 space-y-3">{faqs.map(([question, answer], index) => { const isOpen = openIndex === index; return <div key={question} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card"><button className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" onClick={() => setOpenIndex(isOpen ? null : index)} aria-expanded={isOpen}><span className="text-sm font-semibold text-navy-900 sm:text-base">{question}</span><ChevronDown className={`h-5 w-5 shrink-0 text-msblue-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} /></button>{isOpen && <div className="px-5 pb-5 animate-fade-in"><p className="text-sm leading-relaxed text-slate-600">{answer}</p></div>}</div>; })}</div></div></section>;
+}
